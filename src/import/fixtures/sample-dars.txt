@@ -1,0 +1,39 @@
+Hokie, Bird
+BACHELOR OF SCIENCE IN COMPUTER SCIENCE
+Prepared On   10/01/2026 09:00 AM   Program   BSCS CS   Catalog Year   Fall 2025
+Code
+Student ID   000000000   Graduation   05/10/29   Job ID   0000000000000000
+Date
+------> AT LEAST ONE REQUIREMENT HAS NOT BEEN SATISFIED <------
+Computer Science Degree Core Requirement
+1)   Degree Core Required Courses Completed
+25FA   CS 1114   3.0   AP   Introduction Software Design
+CSXCSA Advanced Placement
+26SP   CS 2505   3.0   B   Intro Computer Organization
+SELECT FROM:   CS 3214,3604
+Course History
+IP   AWARDED:   46.00   HOURS   3.500   GPA
+2025FA
+25FA   CS 1114   3.0   AP   Introduction Software Design
+CSXCSA Advanced Placement
+25FA   ENGL 1105   3.0   AP   First-Year Writing
+ENGLXXXX Advanced Placement
+25FA   ENGL 1106   3.0   AP   First-Year Writing
+25FA   MATH 1225   4.0   A   Calculus of a Single Variable
+25FA   CHEM 1035   3.0   B+   General Chemistry
+25FA   CHEM 1045   1.0   B   General Chemistry Laboratory
+25FA   ENGE 1215   2.0   A   Foundations of Engineering
+25FA   HIST 1215   3.0   B   Introduction to World History
+25FA   MATH 1026   0.0   AP   >D   Elementary Calculus
+26SP
+26SP   CS 2114   3.0   C-   Softw Des & Data Structures
+26SP   CS 2505   3.0   B   Intro Computer Organization
+26SP   MATH 1226   4.0   B   Calculus of a Single Variable
+26SP   PHYS 2305   4.0   A-   Foundations of Physics
+26SP   ENGE 1216   2.0   A   Foundations of Engineering
+26SU   MATH 1XXX   1.0   TR   Math Elective
+26FA   CS 2506   3.0   IP   Intro to Computer Organizatio
+26FA   CS 3114   3.0   IP   Data Structures and Algorithm
+=================================================================
+UNDERGRADUATE CREDIT SUMMARY TO DATE
+*************************END OF ANALYSIS*************************

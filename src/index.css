@@ -1,0 +1,11 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-maroon: #861f41;
+  --color-maroon-dark: #630031;
+  --color-burnt: #e5751f;
+}
+
+body {
+  @apply bg-stone-50 text-stone-800 antialiased;
+}

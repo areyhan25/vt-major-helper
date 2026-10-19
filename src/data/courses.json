@@ -1,0 +1,30 @@
+{
+  "_comment": "Seed list of Pathways tags for common first- and second-year courses. The catalog scraper will replace this with every course.",
+  "courses": {
+    "ENGL 1105": { "pathways": ["1f"] },
+    "ENGL 1106": { "pathways": ["1f"] },
+    "COMM 1015": { "pathways": ["1f"] },
+    "COMM 1016": { "pathways": ["1f"] },
+    "HIST 1215": { "pathways": ["2"] },
+    "HIST 1216": { "pathways": ["2"] },
+    "ECON 2005": { "pathways": ["3"] },
+    "ECON 2006": { "pathways": ["3"] },
+    "PSYC 1004": { "pathways": ["3"] },
+    "BIOL 1105": { "pathways": ["4"] },
+    "BIOL 1106": { "pathways": ["4"] },
+    "CHEM 1035": { "pathways": ["4"] },
+    "CHEM 1036": { "pathways": ["4"] },
+    "PHYS 2305": { "pathways": ["4"] },
+    "PHYS 2306": { "pathways": ["4"] },
+    "CS 1014": { "pathways": ["5f"] },
+    "MATH 1225": { "pathways": ["5f"] },
+    "MATH 1226": { "pathways": ["5f"] },
+    "CS 3114": { "pathways": ["5a"] },
+    "STAT 3604": { "pathways": ["5a"] },
+    "ITDS 1114": { "pathways": ["6a"] },
+    "CS 2114": { "pathways": ["6d"] },
+    "ENGE 1215": { "pathways": ["6d"] },
+    "ENGE 1216": { "pathways": ["6d"] },
+    "ACIS 4544": { "pathways": ["6d", "10"] }
+  }
+}

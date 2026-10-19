@@ -1,0 +1,291 @@
+{
+  "id": "cs-bs-2025",
+  "name": "Computer Science, B.S.",
+  "catalogYear": "2025-2026",
+  "darsCodes": ["BSCS CS"],
+  "totalCredits": 123,
+  "source": "https://catalog.vt.edu/undergraduate/college-engineering/computer-science/computer-science-bs/",
+  "notes": [
+    "Natural science pairs (like CHEM 1035 with CHEM 1045) are checked by credits, not as matched pairs.",
+    "The 30-credit non-technical course check, foreign language, and in-major GPA aren't checked yet.",
+    "Pathways Concept 7 is suspended effective Fall 2025, so it isn't listed."
+  ],
+  "sections": [
+    {
+      "id": "degree-core",
+      "title": "Degree Core",
+      "bucket": "major",
+      "exclusive": true,
+      "priority": 0,
+      "note": "Pathways courses can't double count with Degree Core.",
+      "rule": {
+        "type": "allOf",
+        "rules": [
+          { "type": "course", "course": "CS 1114", "minGrade": "C" },
+          { "type": "course", "course": "CS 2505", "minGrade": "C" },
+          { "type": "course", "course": "CS 2506", "minGrade": "C" },
+          { "type": "course", "course": "CS 3214" },
+          { "type": "course", "course": "CS 3604" },
+          { "type": "course", "course": "MATH 2114" },
+          {
+            "type": "anyOf",
+            "label": "Multivariable Calculus",
+            "rules": [
+              { "type": "course", "course": "MATH 2204" },
+              { "type": "course", "course": "CMDA 2005" }
+            ]
+          },
+          {
+            "type": "anyOf",
+            "label": "Discrete Math or Proofs",
+            "rules": [
+              { "type": "course", "course": "MATH 2534" },
+              { "type": "course", "course": "MATH 3034" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "major",
+      "title": "Major Requirements",
+      "bucket": "major",
+      "priority": 1,
+      "rule": {
+        "type": "allOf",
+        "rules": [
+          {
+            "type": "anyOf",
+            "label": "Problem Solving in CS (C or better)",
+            "rules": [
+              { "type": "course", "course": "CS 2104", "minGrade": "C" },
+              { "type": "course", "course": "CS 2144", "minGrade": "C" },
+              { "type": "course", "course": "CS 4144", "minGrade": "C" }
+            ]
+          },
+          { "type": "course", "course": "CS 3304" },
+          {
+            "type": "credits",
+            "label": "CS Theory Elective",
+            "credits": 3,
+            "from": ["CS 4104", "CS 4114", "CS 4124", "CS 4134", "CS 5104", "CS 5114"]
+          },
+          {
+            "type": "credits",
+            "label": "Capstone",
+            "credits": 3,
+            "from": [
+              "CS 4094", "CS 4274", "CS 4284", "CS 4624", "CS 4634", "CS 4644", "CS 4664",
+              "CS 4704", "CS 4784", "CS 4884", "ENGE 4735", "ENGE 4736"
+            ]
+          },
+          {
+            "type": "credits",
+            "label": "CS 4000/5000 Level Elective",
+            "credits": 3,
+            "from": [
+              "CS 4***", "CS 5***", "BIT 4164", "CMDA 4654", "ECE 4424", "ECE 4504",
+              "MATH 4414", "PSCI 4164", "STAT 4654", "STS 4014"
+            ],
+            "exclude": [
+              "CS 4944", "CS 4774", "CS 5040", "CS 5044", "CS 5045", "CS 5046", "CS 5644",
+              "CS 5664", "CS 5904", "CS 5944", "CS 5974", "CS 5994"
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "pathways-major",
+      "title": "Required Courses That Also Count for Pathways",
+      "bucket": "major",
+      "priority": 0,
+      "rule": {
+        "type": "allOf",
+        "rules": [
+          { "type": "course", "course": "ENGL 1105" },
+          { "type": "course", "course": "ENGL 1106" },
+          { "type": "course", "course": "MATH 1225", "minGrade": "C-" },
+          { "type": "course", "course": "MATH 1226" },
+          { "type": "course", "course": "CS 3114", "minGrade": "C" },
+          {
+            "type": "anyOf",
+            "label": "Foundations of Engineering",
+            "rules": [
+              {
+                "type": "allOf",
+                "rules": [
+                  { "type": "course", "course": "ENGE 1215" },
+                  { "type": "course", "course": "ENGE 1216" }
+                ]
+              },
+              { "type": "course", "course": "ENGE 1414" }
+            ]
+          },
+          {
+            "type": "credits",
+            "label": "Natural Science (8 credits)",
+            "credits": 8,
+            "from": ["BIOL 1105", "BIOL 1115", "CHEM 1035", "CHEM 1045", "PHYS 2305"]
+          }
+        ]
+      }
+    },
+    {
+      "id": "additional",
+      "title": "Additional Major Courses",
+      "bucket": "major",
+      "priority": 0,
+      "rule": {
+        "type": "allOf",
+        "rules": [
+          { "type": "course", "course": "CS 2114", "minGrade": "C" },
+          { "type": "course", "course": "CS 1944" },
+          { "type": "course", "course": "CS 4944" },
+          {
+            "type": "anyOf",
+            "label": "Combinatorics or Modern Algebra",
+            "rules": [
+              { "type": "course", "course": "MATH 3134" },
+              { "type": "course", "course": "MATH 3124" }
+            ]
+          },
+          { "type": "course", "course": "ENGE 3900", "label": "Career Bridge Experience" }
+        ]
+      }
+    },
+    {
+      "id": "restricted",
+      "title": "Restricted Electives",
+      "bucket": "major",
+      "priority": 2,
+      "rule": {
+        "type": "allOf",
+        "rules": [
+          {
+            "type": "credits",
+            "label": "Advanced Natural Science Elective",
+            "credits": 4,
+            "from": ["BIOL 1106", "BIOL 1116", "CHEM 1036", "CHEM 1046", "PHYS 2306"]
+          },
+          {
+            "type": "credits",
+            "label": "Communications Elective",
+            "credits": 3,
+            "from": ["COMM 2004", "COMM 2014"]
+          },
+          {
+            "type": "credits",
+            "label": "Professional Writing Elective",
+            "credits": 3,
+            "from": ["ENGL 3764", "ENGL 3804", "ENGL 3814", "ENGL 3824", "ENGL 3834", "ENGL 3844", "ENGL 4824"]
+          },
+          {
+            "type": "credits",
+            "label": "Statistics Elective",
+            "credits": 3,
+            "from": ["STAT 4705", "STAT 4105", "STAT 4714", "STAT 4604", "STAT 3704", "CMDA 2006"]
+          },
+          {
+            "type": "credits",
+            "label": "CS 3000/4000/5000 Level Electives (6 credits)",
+            "credits": 6,
+            "courses": 2,
+            "from": [
+              "CS 3***", "CS 4***", "CS 5***", "BIT 4164", "CMDA 3654", "CMDA 4654", "ECE 4424",
+              "ECE 4504", "MATH 3414", "MATH 4414", "PSCI 4164", "STAT 3654", "STAT 4654", "STS 4014"
+            ],
+            "exclude": [
+              "CS 3114", "CS 3634", "CMDA 3634", "CS 4774", "CS 5040", "CS 5044", "CS 5045",
+              "CS 5046", "CS 5644", "CS 5664", "CS 5904", "CS 5944", "CS 5974", "CS 5994"
+            ]
+          },
+          {
+            "type": "anyOf",
+            "label": "Technical Elective",
+            "rules": [
+              {
+                "type": "credits",
+                "label": "Any 3000+ CS course",
+                "credits": 3,
+                "from": ["CS 3***", "CS 4***", "CS 5***"],
+                "exclude": [
+                  "CS 3114", "CS 3634", "CMDA 3634", "CS 4774", "CS 5040", "CS 5044", "CS 5045",
+                  "CS 5046", "CS 5644", "CS 5664", "CS 5904", "CS 5944", "CS 5974", "CS 5994"
+                ]
+              },
+              {
+                "type": "credits",
+                "label": "Approved non-CS technical course",
+                "credits": 3,
+                "from": [
+                  "AOE 4434", "ART 3704", "BIT 4424", "BIT 4434", "BIT 4444", "BIT 4544", "BIT 4604",
+                  "BIT 4614", "BIT 4624", "CEM 4624", "CEM 4634", "CMDA 3606", "ECE 3544", "ECE 3574",
+                  "ECE 4524", "ECE 4550", "ECE 4560", "ECE 4564", "ECE 4580", "ECE 4704", "ENGE 4735",
+                  "ENGE 4736", "ENGE 4964", "GEOG 4084", "GEOS 4084", "GEOG 4314", "GEOG 4324",
+                  "MATH 4175", "MATH 4176", "MATH 4445", "MATH 4454", "ME 4524", "MUS 3064",
+                  "MUS 3065", "MUS 3066", "PHYS 4755"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "pathways-1",
+      "title": "Pathways Concept 1: Discourse",
+      "bucket": "pathways",
+      "rule": {
+        "type": "allOf",
+        "rules": [
+          { "type": "credits", "label": "Foundational Discourse (1f)", "credits": 6, "pathways": ["1f"] },
+          { "type": "credits", "label": "Advanced Discourse (1a)", "credits": 3, "pathways": ["1a"] }
+        ]
+      }
+    },
+    {
+      "id": "pathways-2",
+      "title": "Pathways Concept 2: Critical Thinking in the Humanities",
+      "bucket": "pathways",
+      "rule": { "type": "credits", "credits": 6, "pathways": ["2"] }
+    },
+    {
+      "id": "pathways-3",
+      "title": "Pathways Concept 3: Reasoning in the Social Sciences",
+      "bucket": "pathways",
+      "rule": { "type": "credits", "credits": 6, "pathways": ["3"] }
+    },
+    {
+      "id": "pathways-4",
+      "title": "Pathways Concept 4: Reasoning in the Natural Sciences",
+      "bucket": "pathways",
+      "rule": { "type": "credits", "credits": 6, "pathways": ["4"] }
+    },
+    {
+      "id": "pathways-5",
+      "title": "Pathways Concept 5: Quantitative and Computational Thinking",
+      "bucket": "pathways",
+      "rule": {
+        "type": "allOf",
+        "rules": [
+          { "type": "credits", "label": "Foundational (5f)", "credits": 3, "pathways": ["5f"] },
+          { "type": "credits", "label": "Advanced (5a)", "credits": 3, "pathways": ["5a"] },
+          { "type": "credits", "label": "Foundational or Advanced", "credits": 3, "pathways": ["5f", "5a"] }
+        ]
+      }
+    },
+    {
+      "id": "pathways-6",
+      "title": "Pathways Concept 6: Critique and Practice in Design and the Arts",
+      "bucket": "pathways",
+      "rule": {
+        "type": "allOf",
+        "rules": [
+          { "type": "credits", "label": "Arts (6a)", "credits": 3, "pathways": ["6a"] },
+          { "type": "credits", "label": "Design (6d)", "credits": 3, "pathways": ["6d"] }
+        ]
+      }
+    }
+  ]
+}

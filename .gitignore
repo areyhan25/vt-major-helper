@@ -147,3 +147,7 @@ vite.config.ts.timestamp-*
 
 # Turbo Repo
 .turbo
+
+# Real DARS reports and anything personal. Never commit these.
+private/
+*.dars.txt

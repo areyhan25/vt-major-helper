@@ -1,0 +1,23 @@
+{
+ "subject": "Apparel, Housing, & Resour Mgt (AHRM)",
+ "source": "https://catalog.vt.edu/course-descriptions/ahrm/",
+ "scrapedAt": "2026-10-20",
+ "courses": {
+  "AHRM 1014": {"title":"Design and Art for Consumers","credits":"3 credits","description":"Overview of art and design principles and elements with a focus on their application in the creation and promotion of apparel, housing, and residential technology products for diverse consumers. Review of historical art and design trends and theories in relation to these products. Interpretative strategies and methodologies in visual art and design. Exploration of the design process, including examinations of human factors and user needs."},
+  "AHRM 1104": {"title":"Introduction to AHRM and Student Resources","credits":"1 credit","description":"Introduction to the Department of Apparel, Housing, and Resource Management (AHRM), majors and curriculum requirements. Introduces students to experiential learning opportunities, undergraduate research, and career opportunities. Exploration of programs and services to enhance awareness of opportunities and support systems available for student success."},
+  "AHRM 2014": {"title":"Design for Consumers Studio","credits":"3 credits","description":"Exploration and application of design principles and elements in two-dimensional and three-dimensional designs that support the development and promotion of products for diverse consumers, including apparel, housing, residential technologies. Application of skills, tools, and methods to the creation of design. Utilization of the design process to develop plans for consumer products for diverse users. Design Lab/Studio."},
+  "AHRM 2404": {"title":"Consumer Rights","credits":"3 credits","description":"Role of consumers in society and in national and international markets. Consumer rights, responsibilities, policies, regulations and redress. Consumer decision making and planned buying. Current consumer issues such as: product safety, food, health care, housing, environmental impact, banking, credit and insurance from an intercultural perspective."},
+  "AHRM 2954": {"title":"Professional Development","credits":"2 credits","description":"Professional Development guides students through the field study process and skill development, focusing on key areas such as resumes and cover letters, interview techniques, professional etiquette and communication, professional development plans, and self-evaluative assessments. Students will learn to research companies, internships, and job opportunities using various resources and gain proficiency with application platforms and online tools (i.e., LinkedIn, Handshake). Additionally, students will learn effective networking strategies and participate in mock experiences to simulate real-world scenarios."},
+  "AHRM 3464": {"title":"Appalachian Communities","credits":"3 credits","description":"The concept of community in Appalachia using an interdisciplinary approach and experiential learning. Interrelationships among geographically, culturally, and socially constituted communities, public policy, and human development. Pre: Junior standing.","crossListed":"APS 3464, GEOG 3464, HUM 3464, SOC 3464, UAP 3464"},
+  "AHRM 3954": {"title":"Study Abroad","credits":"1-19 credits"},
+  "AHRM 4954": {"title":"Integrative Seminar","credits":"1 credit","description":"An integration of knowledge from the Consumer Studies, Fashion Merchandising and Design, Property Management, and Residential Environments and Design disciplines. Emphasis on interdisciplinary connections, ethical decision-making, career development, workplace culture, mentorship, networking, and digital wellness. Critical analysis of real-world issues and examples relevant to the AHRM disciplines. Engagement with departmental resources in support of professional transition."},
+  "AHRM 4984": {"title":"Special Study","credits":"1-19 credits"},
+  "AHRM 5904": {"title":"Project and Report","credits":"1-19 credits"},
+  "AHRM 5954": {"title":"Study Abroad","credits":"1-19 credits"},
+  "AHRM 5964": {"title":"Practicum","credits":"1-19 credits"},
+  "AHRM 5974": {"title":"Independent Study","credits":"1-19 credits"},
+  "AHRM 5984": {"title":"Special Study","credits":"1-19 credits"},
+  "AHRM 5994": {"title":"Research and Thesis","credits":"1-19 credits"},
+  "AHRM 7994": {"title":"Research and Dissertation","credits":"1-19 credits"}
+ }
+}

@@ -1,0 +1,32 @@
+{
+ "subject": "Property Management (PM)",
+ "source": "https://catalog.vt.edu/course-descriptions/pm/",
+ "scrapedAt": "2026-10-20",
+ "courses": {
+  "PM 2664": {"title":"Introduction to Property Management","credits":"3 credits","description":"The history of residential and commercial property management, roles and responsibilities of real estate managers, developing effective management plans for properties, maintenance strategies, marketing, legal regulations that pertain to real estate management."},
+  "PM 2684": {"title":"Marketing and Leasing Residential Properties","credits":"3 credits","description":"Marketing and leasing functions for multifamily residential properties. Leasing processes, options, and online management tools. Market analysis. State and federal housing laws. Preparation for National Apartment Leasing Professional credentials."},
+  "PM 2964": {"title":"Field Work/Practicum","credits":"1-19 credits"},
+  "PM 2974": {"title":"Independent Study","credits":"1-19 credits"},
+  "PM 2974H": {"title":"Independent Study","credits":"1-19 credits"},
+  "PM 2984": {"title":"Special Study","credits":"1-19 credits"},
+  "PM 3634": {"title":"Managing Affordable and Specialized Housing","credits":"3 credits","description":"Operations management of specialized housing such as senior apartments, active adult communities, independent living communities, assisted living communities, nursing homes, affordable housing, military housing, student housing, as well as community associations and mixed-use housing developments. Consideration of consumer lifestyles, financial circumstances, and sustainability issues for each housing option."},
+  "PM 3674": {"title":"Property Management Operations","credits":"3 credits","description":"Detailed investigation and analysis of the fundamentals of property management operation functions. Functions included: human resources and relationship management, maintenance and risk management, marketing and leasing, and accounting and finance. Property manager and property owner role interpretation through examination of management agreement and plan components as well as nuances among residential properties, office buildings, and shopping centers."},
+  "PM 3684": {"title":"Sustainable Property Management","credits":"3 credits","description":"Comparison and justification of green alternatives during the operations and maintenance phase of the building lifecycle by function with respect to the interrelationships of the social, environmental, and economic spheres of sustainability. Course topics also include group and individual decision-making and their influences on resource use such as energy, water, and waste as well as environmental degradation concern and its influence on various stakeholders and their relationship with each other. Ethical issues as they relate to sustainable property management also covered."},
+  "PM 3900": {"title":"Bridge Experience","credits":"0 credits","description":"Application of academic knowledge and skills in a work-based experience aligned with post-graduation goals using research-based learning processes. Satisfactory completion of work-based experience often in the form of internship, undergraduate research, co-op, or study abroad; self-evaluation; reflection; and showcase of learning. Pre: Department approval plan of 3900."},
+  "PM 3954": {"title":"Study Abroad","credits":"1-19 credits"},
+  "PM 4644": {"title":"Advanced Property and Asset Management","credits":"3 credits","description":"Examination of the competencies necessary to maximize the value of real estate assets through effective operations and financial management practices. Includes detailed examination of income maximization, financial reporting, and ownership objectives of real estate investors.","prereq":"PM 3674 and ACIS 1504"},
+  "PM 4674H": {"title":"Managing and Marketing Housing for Later Life","credits":"2 credits","description":"Managing and marketing housing for later life, including active adult communities and assisted living facilities. Pre: Junior Standing"},
+  "PM 4684": {"title":"Leasing Commercial Properties","credits":"3 credits","description":"Examination of the strategies used to market and lease various types of industrial, office and retail buildings with emphasis placed on brokerage relationships, the legal structure of commercial real estate leases, lease analytics, lease negotiations, and the impact of lease terms on the value of income-producing properties. Pre: Junior Standing."},
+  "PM 4694": {"title":"Contemporary Issues in Property Management","credits":"3 credits","description":"Issues affecting property management, including ethics, professional management decisions, legislative issues, and current management practices. The course culminates in the analysis of an apartment community and development of a management plan. Senior standing.","prereq":"PM 4964 or PM 4644"},
+  "PM 4744": {"title":"Housing Challenges and Policies in the United States","credits":"3 credits","description":"Overview of the issues relating to U.S. housing policy with an emphasis on housing affordability, homeownership, fair housing and community development, and homelessness. Examination of the policy tools used to respond to housing problems at local, state and federal levels."},
+  "PM 4914": {"title":"Residential Property Management Study Tour","credits":"1-19 credits","description":"Study tour that examines trends in the multifamily housing industry focusing on marketing, management, design, and customer service. Variable credit 2 credits maximum."},
+  "PM 4964": {"title":"Field Work/Practicum","credits":"1-19 credits"},
+  "PM 4964H": {"title":"Field Work/Practicum","credits":"1-19 credits"},
+  "PM 4974": {"title":"Independent Study","credits":"1-19 credits"},
+  "PM 4974H": {"title":"Independent Study","credits":"1-19 credits"},
+  "PM 4984": {"title":"Special Study","credits":"1-19 credits"},
+  "PM 4984H": {"title":"Special Study","credits":"1-19 credits"},
+  "PM 4994": {"title":"Undergraduate Research","credits":"1-19 credits"},
+  "PM 4994H": {"title":"Undergraduate Research","credits":"1-19 credits"}
+ }
+}

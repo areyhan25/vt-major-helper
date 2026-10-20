@@ -1,0 +1,27 @@
+{
+ "subject": "Latin (LAT)",
+ "source": "https://catalog.vt.edu/course-descriptions/lat/",
+ "scrapedAt": "2026-10-20",
+ "courses": {
+  "LAT 1105": {"title":"Elementary Latin","credits":"3 credits","description":"Introduction to Latin, for development of reading ability. 1105: Introduction to the basics of the language and short readings of graded difficulty. 1106: Introduction to the basics of the language, continued, with introduction of selected passages from ancient Roman authors for reading, comprehension, and translation."},
+  "LAT 1106": {"title":"Elementary Latin","credits":"3 credits","description":"Introduction to Latin, for development of reading ability. 1105: Accidence, syntax, and vocabulary, with translation of discrete sentences and short readings of graded difficulty. 1106: Accidence, syntax, and vocabulary continued, with the introduction of selected passages from ancient Roman authors for reading, comprehension, and translation."},
+  "LAT 2104": {"title":"Cicero and Livy","credits":"3 credits","description":"A course in two major Latin prose authors. Review and refinement of the language is combined with an increasing attention to historical, cultural, linguistic and literary questions. May be repeated with different content for a maximum of 9 credits.","repeatability":"up to 9 credit hours"},
+  "LAT 2114": {"title":"Latin Epic: Vergil and Ovid","credits":"3 credits","description":"A course in two important Latin poets of the Age of Augustus with a view to increasing the students ability to understand and read Latin. Review and refinement of the language is combined with an increasing attention to historical, linguistic, cultural, and literary questions. May be repeated with different content for a maximum of 9 credits.","repeatability":"up to 9 credit hours"},
+  "LAT 2124": {"title":"Latin Lyric: Catullus and Horace","credits":"3 credits","description":"Two important Latin poets of the Late Republic. Review and refinement of the language is combined with an increasing attention to historical, linguistic, cultural, and literary questions. May be repeated with different content for a maximum of 9 credits.","repeatability":"up to 9 credit hours"},
+  "LAT 2134": {"title":"Late Medieval Latin","credits":"3 credits","description":"Post-classical Latin, from Augustine and Boethius through the Middle Ages, Renaissance, and the Modern Age. Review and refinement of the language is combined with an increasing attention to historical, cultural, linguistic and literary questions. May be repeated with different content for a maximum of 9 credits.","repeatability":"up to 9 credit hours"},
+  "LAT 2964": {"title":"Field Study","credits":"1-19 credits"},
+  "LAT 2974": {"title":"Independent Study","credits":"1-19 credits"},
+  "LAT 2974H": {"title":"Independent Study","credits":"1-19 credits","description":"Honors section."},
+  "LAT 2984": {"title":"Special Study","credits":"1-19 credits"},
+  "LAT 3004": {"title":"Readings in Latin Literature","credits":"3 credits","description":"A variable content course devoted to the study of major Latin texts not offered in the 2000-level courses. Emphasis is on content, style, and context. May be repeated for credit with different content. Two 2000-level courses in Latin or equivalent proficiency required. Writing Intensive."},
+  "LAT 4964": {"title":"Field Study","credits":"1-19 credits"},
+  "LAT 4974": {"title":"Independent Study","credits":"1-19 credits"},
+  "LAT 4974H": {"title":"Independent Study","credits":"1-19 credits","description":"Honors section."},
+  "LAT 4984": {"title":"Special Study","credits":"1-19 credits"},
+  "LAT 4994": {"title":"Undergraduate Research","credits":"1-19 credits"},
+  "LAT 4994H": {"title":"Undergraduate Research","credits":"1-19 credits","description":"Honors section."},
+  "LAT 5974": {"title":"Independent Study","credits":"1-19 credits"},
+  "LAT 5984": {"title":"Special Study","credits":"1-19 credits"},
+  "LAT 5994": {"title":"Research and Thesis","credits":"1-19 credits"}
+ }
+}

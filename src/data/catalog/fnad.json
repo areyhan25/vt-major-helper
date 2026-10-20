@@ -1,0 +1,13 @@
+{
+ "subject": "Financial Aid (FNAD)",
+ "source": "https://catalog.vt.edu/course-descriptions/fnad/",
+ "scrapedAt": "2026-10-20",
+ "courses": {
+  "FNAD 3900": {"title":"Study Abroad-Consortium Enroll","credits":"1-21 credits"},
+  "FNAD 3910": {"title":"Travel Activity","credits":"0 credits"},
+  "FNAD 3920": {"title":"Domestic Consortium","credits":"1-19 credits"},
+  "FNAD 3930": {"title":"International Autonomous","credits":"1-19 credits"},
+  "FNAD 3950H": {"title":"Honors Travel Abroad","credits":"1-19 credits"},
+  "FNAD 5900": {"title":"Consortium Enrollment","credits":"19 credits"}
+ }
+}

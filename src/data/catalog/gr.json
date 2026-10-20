@@ -1,0 +1,24 @@
+{
+ "subject": "Greek (GR)",
+ "source": "https://catalog.vt.edu/course-descriptions/gr/",
+ "scrapedAt": "2026-10-20",
+ "courses": {
+  "GR 1105": {"title":"Classical and New Testament Greek","credits":"3 credits","description":"Introduction to classical/New Testament Greek, for development of reading ability. 1105: Short readings of graded difficulty. 1106: Introduction to the basics of the introduction of language, continued, with the introduction of select longer passages from ancient Greek authors."},
+  "GR 1106": {"title":"Classical and New Testament Greek","credits":"3 credits","description":"Introduction to classical/New Testament Greek, for development of reading ability. 1105: Accidence, syntax, and vocabulary, with translation of short readings of graded difficulty. 1106: Accidence, syntax, and vocabulary continued, with the introduction of selected longer passages from ancient Greek authors."},
+  "GR 1205": {"title":"Elementary Modern Greek","credits":"3 credits","description":"Fundamentals of modern Greek with emphasis on developing proficiency for communication through reading, writing, speaking, listening, and cultural competence. GR 1205 is for students with no prior knowledge of the language."},
+  "GR 2104": {"title":"Greek New Testament","credits":"3 credits","description":"Review and refinement of the language is combined with readings from the New Testament in ancient Greek, with attention to historical context and analysis of the language May be repeated with different content for a maximum of 9 credits.","crossListed":"RLCL 2104","repeatability":"up to 9 credit hours"},
+  "GR 2114": {"title":"Readings in Classical Greek Literature","credits":"3 credits","description":"Study of several major writers of ancient Greek literature. Selections from epic poetry, tragedies, philosophical dialogues, history and oratory. May be repeated with different content for a maximum of 9 credits.","repeatability":"up to 9 credit hours"},
+  "GR 2964": {"title":"Field Study","credits":"1-19 credits"},
+  "GR 2974": {"title":"Independent Study","credits":"1-19 credits"},
+  "GR 2974H": {"title":"Independent Study","credits":"1-19 credits"},
+  "GR 2984": {"title":"Special Study","credits":"1-19 credits"},
+  "GR 4964": {"title":"Field Study","credits":"1-19 credits"},
+  "GR 4974": {"title":"Independent Study","credits":"1-19 credits"},
+  "GR 4974H": {"title":"Independent Study","credits":"1-19 credits"},
+  "GR 4984": {"title":"Special Study","credits":"1-19 credits"},
+  "GR 4994": {"title":"Undergraduate Research","credits":"1-19 credits"},
+  "GR 4994H": {"title":"Undergraduate Research","credits":"1-19 credits"},
+  "GR 5974": {"title":"Independent Study","credits":"1-19 credits"},
+  "GR 6974": {"title":"Independent Study","credits":"1-19 credits"}
+ }
+}

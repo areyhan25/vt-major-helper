@@ -36,3 +36,24 @@ body {
 summary::-webkit-details-marker {
   display: none;
 }
+
+/* Fills the bar on the loading screen shown after picking a major. */
+@keyframes loading-fill {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+.loading-bar {
+  animation: loading-fill 1.2s ease-in-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading-bar {
+    animation: none;
+    width: 100%;
+  }
+}

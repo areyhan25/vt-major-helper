@@ -26,6 +26,8 @@ export default function App() {
   const [confirmingReset, setConfirmingReset] = useState(false)
   // True for a moment after a major is picked on the welcome page.
   const [loading, setLoading] = useState(false)
+  // Fade the app in when it replaces the loading screen, but not on a plain page load.
+  const [fadeIn, setFadeIn] = useState(false)
 
   useEffect(() => {
     if (!loading) return
@@ -144,13 +146,14 @@ export default function App() {
         onPick={(id) => {
           setProgramId(id)
           setLoading(true)
+          setFadeIn(true)
         }}
       />
     )
   if (loading) return <MajorLoading program={picked} />
 
   return (
-    <div className="flex min-h-screen">
+    <div className={`flex min-h-screen ${fadeIn ? 'app-fade-in' : ''}`}>
       <aside className="sticky top-0 hidden h-screen w-72 shrink-0 flex-col border-r border-line bg-panel p-5 lg:flex">
         <Brand />
         <div className="mt-8">

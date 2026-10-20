@@ -13,7 +13,7 @@ function matches(p: Program, query: string) {
   return p.name.toLowerCase().includes(q) || abbreviation(p).toLowerCase().startsWith(q)
 }
 
-/** The first page: a big "Choose your major" and a search box that suggests the majors we support. */
+/** The first page: the app's name, then "Choose your major" and a search box that suggests the majors we support. */
 export function Welcome({ programs, onPick }: { programs: Program[]; onPick: (id: string) => void }) {
   const [query, setQuery] = useState('')
   const [open, setOpen] = useState(true)
@@ -40,13 +40,16 @@ export function Welcome({ programs, onPick }: { programs: Program[]; onPick: (id
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center px-4 pt-[18vh] pb-8">
+    <div className="flex min-h-screen flex-col items-center px-4 pt-[10vh] pb-8">
       <div className="grid size-14 place-items-center rounded-full bg-gradient-to-br from-maroon to-burnt text-lg font-bold text-white shadow-lg shadow-maroon/30">
         VT
       </div>
-      <h1 className="mt-6 text-center text-4xl font-semibold tracking-tight sm:text-5xl">Choose your major</h1>
+      <h1 className="mt-6 text-center text-4xl font-semibold tracking-tight sm:text-5xl">Virginia Tech Major Helper</h1>
+      <p className="mt-3 text-center text-base text-muted sm:text-lg">A tool to help you manage and plan your courses.</p>
 
-      <div className="relative mt-8 w-full max-w-lg">
+      <h2 className="mt-14 text-center text-2xl font-semibold tracking-tight">Choose your major</h2>
+
+      <div className="relative mt-5 w-full max-w-lg">
         <svg
           viewBox="0 0 20 20"
           fill="currentColor"

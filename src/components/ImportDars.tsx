@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { programForDars } from '../data'
 import type { Program, TakenCourse } from '../engine/types'
 import { parseDars } from '../import/dars'
+import { inputClass } from './styles'
 
 interface Props {
   program: Program
@@ -27,9 +28,9 @@ export function ImportDars({ program, onImport }: Props) {
     if (result.programCode && !matched) {
       parts.push(`Your DARS is for ${result.programCode}, which isn't supported yet, so it's audited against ${program.name}.`)
     }
-    const startYear = (matched ?? program).catalogYear.slice(0, 4)
-    if (result.catalogYear && !result.catalogYear.endsWith(startYear)) {
-      parts.push(`Your catalog year is ${result.catalogYear}, but these requirements are for ${(matched ?? program).catalogYear}.`)
+    const target = matched ?? program
+    if (result.catalogYear && !result.catalogYear.endsWith(target.catalogYear.slice(0, 4))) {
+      parts.push(`Your catalog year is ${result.catalogYear}, but these requirements are for ${target.catalogYear}.`)
     }
     setMessage({ tone: parts.length > 1 ? 'warn' : 'ok', text: parts.join(' ') })
     setPasting(false)
@@ -53,55 +54,59 @@ export function ImportDars({ program, onImport }: Props) {
     }
   }
 
-  const tone = { ok: 'bg-green-50 text-green-800', warn: 'bg-amber-50 text-amber-900', error: 'bg-red-50 text-red-800' }
+  const tone = { ok: 'bg-black/20 text-white', warn: 'bg-black/30 text-white', error: 'bg-black/40 text-white' }
 
   return (
-    <section className="rounded-xl border border-stone-200 bg-white p-4 shadow-sm">
-      <h2 className="font-semibold">Import your DARS</h2>
-      <p className="mt-1 text-sm text-stone-600">
-        In Hokie SPA, run your degree audit, then print or save the Audit Results page as a PDF. It's read right here
-        in your browser and never uploaded.
-      </p>
-      <div className="mt-3 flex flex-wrap gap-2">
-        <label className="cursor-pointer rounded-md bg-maroon px-3 py-1.5 text-sm font-medium text-white hover:bg-maroon-dark">
-          {busy ? 'Reading…' : 'Choose PDF'}
-          <input
-            type="file"
-            accept=".pdf,.txt,.html,application/pdf,text/plain"
-            className="hidden"
-            disabled={busy}
-            onChange={(e) => {
-              const f = e.target.files?.[0]
-              if (f) void onFile(f)
-              e.target.value = ''
-            }}
-          />
-        </label>
-        <button
-          className="rounded-md border border-stone-300 px-3 py-1.5 text-sm hover:bg-stone-50"
-          onClick={() => setPasting((p) => !p)}
-        >
-          Paste text instead
-        </button>
-      </div>
-      {pasting && (
-        <div className="mt-3 space-y-2">
-          <textarea
-            className="h-32 w-full rounded-md border border-stone-300 p-2 font-mono text-xs"
-            placeholder="Select all on your DARS page, copy, and paste here"
-            value={pasted}
-            onChange={(e) => setPasted(e.target.value)}
-          />
+    <section className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-maroon to-[#b4462f] p-5 shadow-lg shadow-maroon/20">
+      <div className="pointer-events-none absolute -right-10 -top-10 size-40 rounded-full bg-burnt/30 blur-2xl" />
+      <div className="relative">
+        <div className="text-sm text-white/70">Import</div>
+        <h2 className="mt-1 text-xl font-semibold leading-snug text-white">Load your DARS audit</h2>
+        <p className="mt-2 text-sm text-white/80">
+          Run your audit in Hokie SPA and save the Audit Results page as a PDF. It's read right here in your browser
+          and never uploaded.
+        </p>
+        <div className="mt-4 flex flex-wrap gap-2">
+          <label className="cursor-pointer rounded-lg bg-white px-3.5 py-1.5 text-sm font-semibold text-maroon hover:bg-white/90">
+            {busy ? 'Reading…' : 'Choose PDF'}
+            <input
+              type="file"
+              accept=".pdf,.txt,.html,application/pdf,text/plain"
+              className="hidden"
+              disabled={busy}
+              onChange={(e) => {
+                const f = e.target.files?.[0]
+                if (f) void onFile(f)
+                e.target.value = ''
+              }}
+            />
+          </label>
           <button
-            className="rounded-md bg-maroon px-3 py-1.5 text-sm font-medium text-white disabled:opacity-50"
-            disabled={!pasted.trim()}
-            onClick={() => importText(pasted)}
+            className="rounded-lg border border-white/30 px-3.5 py-1.5 text-sm text-white hover:bg-white/10"
+            onClick={() => setPasting((p) => !p)}
           >
-            Import
+            Paste text
           </button>
         </div>
-      )}
-      {message && <p className={`mt-3 rounded-md px-3 py-2 text-sm ${tone[message.tone]}`}>{message.text}</p>}
+        {pasting && (
+          <div className="mt-3 space-y-2">
+            <textarea
+              className={`${inputClass} h-28 font-mono text-xs`}
+              placeholder="Select all on your DARS page, copy, and paste here"
+              value={pasted}
+              onChange={(e) => setPasted(e.target.value)}
+            />
+            <button
+              className="rounded-lg bg-white px-3.5 py-1.5 text-sm font-semibold text-maroon disabled:opacity-50"
+              disabled={!pasted.trim()}
+              onClick={() => importText(pasted)}
+            >
+              Import
+            </button>
+          </div>
+        )}
+        {message && <p className={`mt-3 rounded-lg px-3 py-2 text-sm ${tone[message.tone]}`}>{message.text}</p>}
+      </div>
     </section>
   )
 }

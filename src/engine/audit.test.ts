@@ -2,7 +2,8 @@ import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import { courseInfo, programs } from '../data'
 import { parseDars } from '../import/dars'
-import { runAudit, termOrder } from './audit'
+import { runAudit } from './audit'
+import { termLabel, termOrder, termsAfter } from './terms'
 import { meetsMinGrade } from './grades'
 import { matchesPattern } from './match'
 import type { Program, TakenCourse } from './types'
@@ -34,6 +35,15 @@ describe('helpers', () => {
     expect(termOrder('26SP')).toBeLessThan(termOrder('26SU'))
     expect(termOrder('26SU')).toBeLessThan(termOrder('26FA'))
     expect(termOrder('25FA')).toBeLessThan(termOrder('26SP'))
+  })
+
+  it('labels terms and lists the ones after', () => {
+    expect(termLabel('25FA')).toBe('Fall 2025')
+    expect(termsAfter('26SP', 4)).toEqual(['26SU', '26FA', '27SP', '27SU'])
+  })
+
+  it('treats planned courses like in-progress ones', () => {
+    expect(meetsMinGrade('PL', 'C')).toBe(true)
   })
 })
 

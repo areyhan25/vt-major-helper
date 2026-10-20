@@ -1,11 +1,38 @@
 @import 'tailwindcss';
 
 @theme {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+  /* Virginia Tech brand colors */
   --color-maroon: #861f41;
-  --color-maroon-dark: #630031;
+  --color-maroon-bright: #a8284f;
   --color-burnt: #e5751f;
+  --color-burnt-soft: #f2a35e;
+
+  /* Dark surfaces */
+  --color-page: #131315;
+  --color-panel: #1b1b1e;
+  --color-raised: #232327;
+  --color-line: #2e2e33;
+  --color-ink: #ececef;
+  --color-muted: #9c9ca6;
+  --color-faint: #6b6b74;
+
+  /* Requirement status */
+  --color-done: #34c27a;
+  --color-progress: #e5751f;
+  --color-needed: #e5484d;
+}
+
+html {
+  color-scheme: dark;
 }
 
 body {
-  @apply bg-stone-50 text-stone-800 antialiased;
+  @apply bg-page font-sans text-ink antialiased;
+}
+
+/* Hide the default disclosure triangle; we draw our own chevron. */
+summary::-webkit-details-marker {
+  display: none;
 }

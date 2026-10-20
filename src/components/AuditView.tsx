@@ -1,125 +1,166 @@
-import type { AuditResult, RuleResult, Status } from '../engine/audit'
+import { useState, type ReactNode } from 'react'
+import type { AuditResult, RuleResult } from '../engine/audit'
 import type { Rule } from '../engine/types'
+import { CourseChip } from './CourseInfo'
+import { Chevron, Chip, Dot, Panel, StatusKey } from './ui'
 
-const STATUS: Record<Status, { label: string; chip: string; dot: string }> = {
-  done: { label: 'Done', chip: 'bg-green-100 text-green-800', dot: 'bg-green-600' },
-  'in-progress': { label: 'In progress', chip: 'bg-amber-100 text-amber-900', dot: 'bg-amber-500' },
-  needed: { label: 'Needed', chip: 'bg-red-100 text-red-800', dot: 'bg-red-600' },
+interface Props {
+  audit: AuditResult
+  titles: Record<string, string>
+  whatIf: boolean
+  onPlan?: (code: string, term: string) => void
+  planTerms: string[]
 }
 
-export function AuditView({ audit }: { audit: AuditResult }) {
-  const { earned, inProgress, required } = audit.totalCredits
-  const pct = (n: number) => `${Math.min(100, (n / required) * 100)}%`
-  const remaining = Math.max(0, required - earned - inProgress)
+export function AuditView({ audit, ...shared }: Props) {
+  // Sections start open when they still need something.
+  const [open, setOpen] = useState<Record<string, boolean>>({})
+  const isOpen = (id: string, status: string) => open[id] ?? status !== 'done'
+  const allOpen = audit.sections.every((s) => isOpen(s.section.id, s.result.status))
 
   return (
-    <section className="space-y-4">
-      <div className="rounded-xl border border-stone-200 bg-white p-4 shadow-sm">
-        <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h2 className="font-semibold">
-            {audit.program.name} <span className="font-normal text-stone-500">· {audit.program.catalogYear} catalog</span>
-          </h2>
-          <Chip status={audit.status} />
-        </div>
-        <div className="mt-3 flex h-3 overflow-hidden rounded-full bg-stone-200">
-          <div className="bg-green-600" style={{ width: pct(earned) }} />
-          <div className="bg-amber-400" style={{ width: pct(inProgress) }} />
-        </div>
-        <p className="mt-2 text-sm text-stone-600">
-          <b className="text-stone-800">{earned}</b> credits earned, <b className="text-stone-800">{inProgress}</b> in
-          progress, <b className="text-stone-800">{remaining}</b> to go of {required}.
-        </p>
-        {audit.program.notes.length > 0 && (
-          <ul className="mt-3 list-disc space-y-0.5 pl-5 text-xs text-stone-500">
-            {audit.program.notes.map((n) => (
-              <li key={n}>{n}</li>
-            ))}
-          </ul>
-        )}
-      </div>
-
-      {audit.sections.map(({ section, result }) => (
-        <details
-          key={section.id}
-          open={result.status !== 'done'}
-          className="group rounded-xl border border-stone-200 bg-white shadow-sm"
-        >
-          <summary className="flex cursor-pointer list-none items-center justify-between gap-3 p-4">
-            <span className="font-medium">{section.title}</span>
-            <Chip status={result.status} />
-          </summary>
-          <div className="border-t border-stone-100 px-4 pb-4 pt-2">
-            {section.note && <p className="mb-2 text-xs text-stone-500">{section.note}</p>}
-            <RuleView result={result} top />
-          </div>
-        </details>
-      ))}
-
-      {audit.unused.length > 0 && (
-        <div className="rounded-xl border border-stone-200 bg-white p-4 shadow-sm">
-          <h3 className="font-medium">Free electives</h3>
-          <p className="mt-1 text-sm text-stone-600">
-            These count toward your total credits but not a specific requirement:{' '}
-            {audit.unused.map((c) => c.code).join(', ')}.
+    <Panel className="p-5">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h2 className="text-lg font-semibold">Requirements</h2>
+          <p className="text-sm text-muted">
+            {audit.program.name} · {audit.program.catalogYear} catalog
           </p>
         </div>
+        <button
+          className="text-xs text-muted hover:text-ink"
+          onClick={() =>
+            setOpen(Object.fromEntries(audit.sections.map((s) => [s.section.id, !allOpen])))
+          }
+        >
+          {allOpen ? 'Collapse all' : 'Expand all'}
+        </button>
+      </div>
+      <div className="mt-3 rounded-lg bg-page/60 px-3 py-2">
+        <StatusKey whatIf={shared.whatIf} />
+      </div>
+
+      <div className="mt-4 divide-y divide-line">
+        {audit.sections.map(({ section, result }) => {
+          const expanded = isOpen(section.id, result.status)
+          return (
+            <div key={section.id}>
+              <button
+                className="flex w-full items-center gap-3 py-3 text-left"
+                aria-expanded={expanded}
+                onClick={() => setOpen((o) => ({ ...o, [section.id]: !expanded }))}
+              >
+                <Chevron open={expanded} />
+                <span className="min-w-0 flex-1 font-medium">{section.title}</span>
+                <Chip status={result.status} />
+              </button>
+              {expanded && (
+                <div className="pb-4 pl-7">
+                  {section.note && <p className="mb-2 text-xs text-faint">{section.note}</p>}
+                  <RuleView result={result} top {...shared} />
+                </div>
+              )}
+            </div>
+          )
+        })}
+      </div>
+
+      {audit.program.notes.length > 0 && (
+        <ul className="mt-4 list-disc space-y-0.5 border-t border-line pl-5 pt-4 text-xs text-faint">
+          {audit.program.notes.map((n) => (
+            <li key={n}>{n}</li>
+          ))}
+        </ul>
       )}
-    </section>
+    </Panel>
   )
 }
 
-function Chip({ status }: { status: Status }) {
-  const s = STATUS[status]
-  return <span className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-medium ${s.chip}`}>{s.label}</span>
-}
+type Shared = Omit<Props, 'audit'>
 
-function RuleView({ result, top = false }: { result: RuleResult; top?: boolean }) {
+function RuleView({ result, top = false, ...shared }: { result: RuleResult; top?: boolean } & Shared) {
   const { rule } = result
   // A section's top-level "all of" is just the list of its requirements.
   if (rule.type === 'allOf' && top) {
     return (
-      <ul className="space-y-1.5">
+      <ul className="space-y-3">
         {result.children!.map((c, i) => (
           <li key={i}>
-            <RuleView result={c} />
+            <RuleView result={c} {...shared} />
           </li>
         ))}
       </ul>
     )
   }
 
+  const opts = result.status === 'needed' ? options(rule) : []
+
   return (
-    <div className="flex items-start gap-2 text-sm">
-      <span className={`mt-1.5 size-2 shrink-0 rounded-full ${STATUS[result.status].dot}`} />
-      <div className="min-w-0">
-        <div>
-          <span className="font-medium">{describe(rule)}</span>
+    <div className="flex items-start gap-2.5 text-sm">
+      <span className="mt-1.5">
+        <Dot status={result.status} />
+      </span>
+      <div className="min-w-0 flex-1 space-y-1.5">
+        <div className="flex flex-wrap items-baseline gap-x-2">
+          {rule.type === 'course' && !rule.label ? (
+            <span>
+              <CourseChip
+                code={rule.course}
+                variant="heading"
+                {...shared}
+                onPlan={shared.whatIf && result.status === 'needed' ? shared.onPlan : undefined}
+              />
+              {rule.minGrade && <span className="ml-1.5 text-xs text-muted">{rule.minGrade} or better</span>}
+              {result.used[0] && (
+                <span className="ml-1.5 text-xs text-faint">
+                  · {result.used[0].grade} in {result.used[0].term}
+                </span>
+              )}
+            </span>
+          ) : (
+            <span className="font-medium">{describe(rule)}</span>
+          )}
           {result.required !== undefined && result.required > 0 && (
-            <span className="ml-2 text-stone-500">
+            <span className="text-xs text-muted">
               {result.earned}
-              {result.inProgress ? ` + ${result.inProgress} in progress` : ''} / {result.required} cr
+              {result.inProgress ? ` + ${result.inProgress}` : ''} / {result.required} cr
             </span>
           )}
         </div>
-        {result.used.length > 0 && (
-          <div className="text-xs text-stone-500">
-            Used: {result.used.map((c) => `${c.code} (${c.grade})`).join(', ')}
-          </div>
+        {result.used.length > 0 && !(rule.type === 'course' && !rule.label) && (
+          <ChipRow>
+            {result.used.map((c) => (
+              <CourseChip key={`${c.term}|${c.code}`} code={c.code} taken={c} variant="used" {...shared} />
+            ))}
+          </ChipRow>
         )}
-        {result.status === 'needed' && options(rule) && (
-          <div className="text-xs text-stone-500">Options: {options(rule)}</div>
+        {opts.length > 0 && (
+          <ChipRow label="Options">
+            {opts.map((code) => (
+              <CourseChip key={code} code={code} {...shared} onPlan={shared.whatIf ? shared.onPlan : undefined} />
+            ))}
+          </ChipRow>
         )}
-        {result.note && <div className="text-xs text-red-700">{result.note}</div>}
+        {result.note && <div className="text-xs text-needed">{result.note}</div>}
         {rule.type === 'allOf' && result.status !== 'done' && (
-          <ul className="mt-1 space-y-1 border-l border-stone-200 pl-3">
+          <ul className="space-y-2 border-l border-line pl-3">
             {result.children!.map((c, i) => (
               <li key={i}>
-                <RuleView result={c} />
+                <RuleView result={c} {...shared} />
               </li>
             ))}
           </ul>
         )}
       </div>
+    </div>
+  )
+}
+
+function ChipRow({ children, label }: { children: ReactNode; label?: string }) {
+  return (
+    <div className="flex flex-wrap items-center gap-1.5">
+      {label && <span className="text-xs text-faint">{label}:</span>}
+      {children}
     </div>
   )
 }
@@ -138,12 +179,22 @@ function describe(rule: Rule): string {
   }
 }
 
-/** A short list of courses that would satisfy a rule, for "what can I take?". */
-function options(rule: Rule): string | undefined {
-  if (rule.type === 'credits' && rule.from) {
-    const list = rule.from.map((p) => p.replace(/\*+$/, 'XXX'))
-    return list.length > 8 ? `${list.slice(0, 8).join(', ')}, and ${list.length - 8} more` : list.join(', ')
+/** Course codes that would satisfy a rule, for "what can I take?". */
+function options(rule: Rule): string[] {
+  switch (rule.type) {
+    case 'course':
+      return rule.label ? [rule.course] : []
+    case 'credits':
+      return rule.from ?? []
+    case 'anyOf':
+      return [...new Set(rule.rules.flatMap(leafCodes))]
+    case 'allOf':
+      return []
   }
-  if (rule.type === 'anyOf' && rule.label) return rule.rules.map(describe).join(', ')
-  return undefined
+}
+
+function leafCodes(rule: Rule): string[] {
+  if (rule.type === 'course') return [rule.course]
+  if (rule.type === 'credits') return rule.from ?? []
+  return rule.rules.flatMap(leafCodes)
 }

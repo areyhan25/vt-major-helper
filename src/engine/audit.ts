@@ -1,5 +1,6 @@
 import { countsForCredit, isInProgress, meetsMinGrade } from './grades'
 import { matchesAny, matchesPattern } from './match'
+import { termOrder } from './terms'
 import type { CourseInfo, Program, Rule, Section, TakenCourse } from './types'
 
 export type Status = 'done' | 'in-progress' | 'needed'
@@ -190,14 +191,6 @@ function dedupeForCredit(courses: TakenCourse[]): TakenCourse[] {
     if (!prev || termOrder(c.term) >= termOrder(prev.term)) best.set(key, c)
   }
   return [...best.values()]
-}
-
-const SEASON: Record<string, number> = { WI: 0, SP: 1, SU: 2, FA: 3 }
-
-/** "26SP" -> 2601, so terms sort in calendar order. Undated credit sorts first. */
-export function termOrder(term: string): number {
-  const m = term.match(/^(\d{2})(WI|SP|SU|FA)$/)
-  return m ? Number(m[1]) * 10 + SEASON[m[2]] : -1
 }
 
 const sum = (cs: TakenCourse[]) => cs.reduce((n, c) => n + c.credits, 0)

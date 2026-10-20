@@ -5,6 +5,11 @@ const KEY = 'vt-major-helper:v1'
 export interface Saved {
   programId?: string
   courses: TakenCourse[]
+  /** What-if mode's copy of the courses, kept separate from the real record. */
+  plan?: TakenCourse[]
+  /** Empty future semesters added in What-if mode. */
+  planTerms?: string[]
+  whatIf?: boolean
 }
 
 /** Everything stays in this browser. Storage can be unavailable (private windows), so failures are ignored. */

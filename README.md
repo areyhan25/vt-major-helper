@@ -5,6 +5,8 @@ Simple and intuitive dashboard to see manage and plan courses to keep up with VT
 
 Pick your major, import your DARS report (or add courses by hand), and see which requirements are done, in progress, or still needed, plus how many credits are left.
 
+Turn on **What-if mode** to plan ahead: drag courses between semesters, change grades, add future semesters, and plan courses straight from a requirement's options. The plan is kept separately, so your real record doesn't change.
+
 Everything runs in your browser. Your DARS PDF is read locally with pdf.js and never uploaded, and your course list is saved only in this browser.
 
 Supported so far: **Computer Science, B.S. (2025-26 catalog)**. Computer Engineering, Electrical Engineering, and Mechanical Engineering are next.

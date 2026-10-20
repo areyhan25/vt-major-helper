@@ -1,0 +1,217 @@
+{
+  "id": "ee-bs-2025",
+  "name": "Electrical Engineering, B.S.",
+  "catalogYear": "2025-2026",
+  "darsCodes": ["BSEE EE"],
+  "totalCredits": 120,
+  "source": "https://catalog.vt.edu/archive/2025-2026/undergraduate/college-engineering/electrical-computer-engineering/electrical-engineering-bs/",
+  "notes": [
+    "Secondary focus is checked as 9 credits of 3000-level and up ECE (plus the listed AOE and CS courses). The single-focus-area rule, the one-4000-level-course rule, and individualized focus plans aren't checked yet.",
+    "Senior Design (ECE 4805-4806) also counts for Pathways 1a, and Differential Equations (MATH 2214) for 5a, once those courses are tagged in the course list.",
+    "Pathways 7 isn't listed. The catalog lets it double count with another Pathways course, and those 3 credits then become free electives.",
+    "Free electives, the in-major GPA, and the foreign language requirement aren't checked yet."
+  ],
+  "sections": [
+    {
+      "id": "degree-core",
+      "title": "Degree Core",
+      "bucket": "major",
+      "priority": 0,
+      "rule": {
+        "type": "allOf",
+        "rules": [
+          { "type": "course", "course": "ECE 1004", "minGrade": "C" },
+          { "type": "course", "course": "ECE 2024", "minGrade": "C" },
+          { "type": "course", "course": "ECE 2214", "minGrade": "C" },
+          { "type": "course", "course": "ECE 2544", "minGrade": "C" },
+          { "type": "course", "course": "ECE 2714", "minGrade": "C" },
+          { "type": "course", "course": "ECE 2804", "minGrade": "C" },
+          { "type": "course", "course": "ECE 3004", "minGrade": "C-" },
+          { "type": "course", "course": "ECE 3074", "minGrade": "C-" },
+          { "type": "course", "course": "ECE 3105", "minGrade": "C-" }
+        ]
+      }
+    },
+    {
+      "id": "major",
+      "title": "Major Requirements",
+      "bucket": "major",
+      "priority": 0,
+      "rule": {
+        "type": "allOf",
+        "rules": [
+          { "type": "course", "course": "ECE 2514", "minGrade": "C" },
+          { "type": "course", "course": "ECE 2564", "minGrade": "C" },
+          { "type": "course", "course": "ECE 3106" },
+          { "type": "course", "course": "ECE 3204" },
+          { "type": "course", "course": "ECE 3274" },
+          { "type": "course", "course": "ECE 3304" },
+          { "type": "course", "course": "ECE 3614" },
+          { "type": "course", "course": "ECE 3704" }
+        ]
+      }
+    },
+    {
+      "id": "pathways-major",
+      "title": "Required Courses That Also Count for Pathways",
+      "bucket": "major",
+      "priority": 0,
+      "rule": {
+        "type": "allOf",
+        "rules": [
+          { "type": "course", "course": "ENGL 1105" },
+          { "type": "course", "course": "ENGL 1106" },
+          {
+            "type": "anyOf",
+            "label": "Senior Design (ECE 4805-4806, or ENGE 4735-4736 with approval)",
+            "rules": [
+              {
+                "type": "allOf",
+                "rules": [
+                  { "type": "course", "course": "ECE 4805" },
+                  { "type": "course", "course": "ECE 4806" }
+                ]
+              },
+              {
+                "type": "allOf",
+                "rules": [
+                  { "type": "course", "course": "ENGE 4735" },
+                  { "type": "course", "course": "ENGE 4736" }
+                ]
+              }
+            ]
+          },
+          { "type": "course", "course": "PHYS 2305" },
+          { "type": "course", "course": "PHYS 2306" },
+          { "type": "course", "course": "MATH 1225", "minGrade": "C-" },
+          { "type": "course", "course": "MATH 1226" },
+          { "type": "course", "course": "MATH 2214", "minGrade": "C-" },
+          {
+            "type": "anyOf",
+            "label": "Foundations of Engineering",
+            "rules": [
+              {
+                "type": "allOf",
+                "rules": [
+                  { "type": "course", "course": "ENGE 1215" },
+                  { "type": "course", "course": "ENGE 1216" }
+                ]
+              },
+              { "type": "course", "course": "ENGE 1414" }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "additional",
+      "title": "Additional Course Requirements",
+      "bucket": "major",
+      "priority": 0,
+      "rule": {
+        "type": "allOf",
+        "rules": [
+          {
+            "type": "anyOf",
+            "label": "Linear Algebra",
+            "rules": [
+              { "type": "course", "course": "MATH 2114", "minGrade": "C-" },
+              { "type": "course", "course": "MATH 2405H" }
+            ]
+          },
+          { "type": "course", "course": "MATH 2204", "minGrade": "C-" },
+          { "type": "course", "course": "STAT 4714", "minGrade": "C-" },
+          { "type": "course", "course": "ENGE 3900", "label": "Career Bridge Experience" }
+        ]
+      }
+    },
+    {
+      "id": "math-elective",
+      "title": "Math Elective",
+      "bucket": "major",
+      "priority": 1,
+      "rule": {
+        "type": "credits",
+        "label": "Math Elective",
+        "credits": 3,
+        "from": [
+          "MATH 2534", "MATH 3034", "MATH 3214", "MATH 3414", "CS 3414", "MATH 4445", "MATH 4446",
+          "MATH 4564", "MATH 4574"
+        ]
+      }
+    },
+    {
+      "id": "secondary-focus",
+      "title": "Secondary Focus",
+      "bucket": "major",
+      "priority": 2,
+      "note": "Any 3 ECE courses at the 3000 level or higher that aren't major courses, with at least one at the 4000 level or higher.",
+      "rule": {
+        "type": "credits",
+        "label": "Secondary Focus Electives (3 courses)",
+        "credits": 9,
+        "courses": 3,
+        "from": [
+          "ECE 3***", "ECE 4***", "ECE 5***", "AOE 4654", "AOE 4674", "CS 3214", "CS 4224", "CS 4264",
+          "CS 4504", "CS 4824"
+        ],
+        "exclude": ["ECE 3054", "ECE 3074", "ECE 3254", "ECE 3274", "ECE 3524", "ECE 4944"]
+      }
+    },
+    {
+      "id": "pathways-1",
+      "title": "Pathways Concept 1: Discourse",
+      "bucket": "pathways",
+      "rule": {
+        "type": "allOf",
+        "rules": [
+          { "type": "credits", "label": "Foundational Discourse (1f)", "credits": 6, "pathways": ["1f"] },
+          { "type": "credits", "label": "Advanced Discourse (1a)", "credits": 3, "pathways": ["1a"] }
+        ]
+      }
+    },
+    {
+      "id": "pathways-2",
+      "title": "Pathways Concept 2: Critical Thinking in the Humanities",
+      "bucket": "pathways",
+      "rule": { "type": "credits", "credits": 6, "pathways": ["2"] }
+    },
+    {
+      "id": "pathways-3",
+      "title": "Pathways Concept 3: Reasoning in the Social Sciences",
+      "bucket": "pathways",
+      "rule": { "type": "credits", "credits": 6, "pathways": ["3"] }
+    },
+    {
+      "id": "pathways-4",
+      "title": "Pathways Concept 4: Reasoning in the Natural Sciences",
+      "bucket": "pathways",
+      "rule": { "type": "credits", "credits": 6, "pathways": ["4"] }
+    },
+    {
+      "id": "pathways-5",
+      "title": "Pathways Concept 5: Quantitative and Computational Thinking",
+      "bucket": "pathways",
+      "rule": {
+        "type": "allOf",
+        "rules": [
+          { "type": "credits", "label": "Foundational (5f)", "credits": 3, "pathways": ["5f"] },
+          { "type": "credits", "label": "Advanced (5a)", "credits": 3, "pathways": ["5a"] },
+          { "type": "credits", "label": "Foundational or Advanced", "credits": 3, "pathways": ["5f", "5a"] }
+        ]
+      }
+    },
+    {
+      "id": "pathways-6",
+      "title": "Pathways Concept 6: Critique and Practice in Design and the Arts",
+      "bucket": "pathways",
+      "rule": {
+        "type": "allOf",
+        "rules": [
+          { "type": "credits", "label": "Arts (6a)", "credits": 3, "pathways": ["6a"] },
+          { "type": "credits", "label": "Design (6d)", "credits": 3, "pathways": ["6d"] }
+        ]
+      }
+    }
+  ]
+}

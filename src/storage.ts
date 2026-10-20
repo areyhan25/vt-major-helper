@@ -5,11 +5,14 @@ const KEY = 'vt-major-helper:v1'
 export interface Saved {
   programId?: string
   courses: TakenCourse[]
-  /** What-if mode's copy of the courses, kept separate from the real record. */
-  plan?: TakenCourse[]
-  /** Empty future semesters added in What-if mode. */
+  /** Planner mode's future courses, all graded PL. Kept apart from the real record. */
+  planned?: TakenCourse[]
+  /** Empty future semesters added in Planner mode. */
   planTerms?: string[]
-  whatIf?: boolean
+  /** What-if mode isn't saved, since it resets when you leave it. */
+  mode?: Exclude<Mode, 'whatif'>
+  /** Older saves: What-if mode's full copy of the courses, which held the planned ones. */
+  plan?: TakenCourse[]
   /** Which tab is open. */
   tab?: Tab
   /** Expected grades for in-progress and planned courses, used by the GPA calculator. */
@@ -17,6 +20,8 @@ export interface Saved {
 }
 
 export type Tab = 'audit' | 'gpa'
+
+export type Mode = 'whatif' | 'current' | 'planner'
 
 /** Everything stays in this browser. Storage can be unavailable (private windows), so failures are ignored. */
 export function load(): Saved {

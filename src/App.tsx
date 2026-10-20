@@ -11,15 +11,19 @@ import { runAudit } from './engine/audit'
 import { PLANNED } from './engine/grades'
 import { termOrder, termsAfter } from './engine/terms'
 import type { TakenCourse } from './engine/types'
-import { load, save, type Tab } from './storage'
+import { load, save, type Mode, type Tab } from './storage'
 
 export default function App() {
   const [saved] = useState(load)
   const [programId, setProgramId] = useState<string | undefined>(saved.programId)
   const [courses, setCourses] = useState<TakenCourse[]>(saved.courses)
-  const [whatIf, setWhatIf] = useState(saved.whatIf ?? false)
-  // null until What-if mode is first opened, then a separate copy of the courses.
-  const [plan, setPlan] = useState<TakenCourse[] | null>(saved.plan ?? null)
+  const [mode, setMode] = useState<Mode>(saved.mode ?? 'current')
+  // Planner mode's future courses. Older saves kept them inside a full copy of the courses.
+  const [planned, setPlanned] = useState<TakenCourse[]>(
+    saved.planned ?? saved.plan?.filter((c) => c.grade === PLANNED) ?? [],
+  )
+  // What-if mode's scratch copy of the courses and major. Never saved, and dropped on leaving.
+  const [whatIf, setWhatIf] = useState<{ courses: TakenCourse[]; programId: string }>()
   const [planTerms, setPlanTerms] = useState<string[]>(saved.planTerms ?? [])
   const [tab, setTab] = useState<Tab>(saved.tab ?? 'audit')
   const [expected, setExpected] = useState(saved.expected ?? {})
@@ -36,14 +40,18 @@ export default function App() {
   }, [loading])
 
   useEffect(
-    () => save({ programId, courses, plan: plan ?? undefined, planTerms, whatIf, tab, expected }),
-    [programId, courses, plan, planTerms, whatIf, tab, expected],
+    () => save({ programId, courses, planned, planTerms, mode: mode === 'whatif' ? 'current' : mode, tab, expected }),
+    [programId, courses, planned, planTerms, mode, tab, expected],
   )
 
   // Undefined until a major is picked on the welcome page.
   const picked = programs.find((p) => p.id === programId)
-  const program = picked ?? programs[0]
-  const active = whatIf && plan ? plan : courses
+  const realProgram = picked ?? programs[0]
+  const program = (mode === 'whatif' && programs.find((p) => p.id === whatIf?.programId)) || realProgram
+  const active = useMemo(
+    () => (mode === 'whatif' && whatIf ? whatIf.courses : mode === 'planner' ? [...courses, ...planned] : courses),
+    [mode, whatIf, courses, planned],
+  )
   const audit = useMemo(() => runAudit(program, active, courseInfo), [program, active])
 
   const titles = useMemo(
@@ -57,22 +65,24 @@ export default function App() {
     (a, b) => termOrder(a) - termOrder(b),
   )
 
-  function startWhatIf() {
-    if (!plan) setPlan(courses)
-    setWhatIf(true)
+  function switchMode(next: Mode) {
+    // What-if starts fresh from the real record every time.
+    setWhatIf(next === 'whatif' ? { courses, programId: realProgram.id } : undefined)
+    setMode(next)
   }
 
-  function resetPlan() {
-    setPlan(courses)
+  function clearPlan() {
+    setPlanned([])
     setPlanTerms([])
   }
 
-  /** Clears the courses, the What-if plan, and the chosen major, which brings back the welcome page. */
+  /** Clears the courses, the plan, and the chosen major, which brings back the welcome page. */
   function startOver() {
     setCourses([])
-    setPlan(null)
+    setPlanned([])
     setPlanTerms([])
-    setWhatIf(false)
+    setWhatIf(undefined)
+    setMode('current')
     setProgramId(undefined)
     setExpected({})
     setConfirmingReset(false)
@@ -82,7 +92,9 @@ export default function App() {
     <select
       className="w-full min-w-0 rounded-lg border border-line bg-raised px-2.5 py-2 text-sm text-ink focus:border-burnt focus:outline-none"
       value={program.id}
-      onChange={(e) => setProgramId(e.target.value)}
+      onChange={(e) =>
+        mode === 'whatif' && whatIf ? setWhatIf({ ...whatIf, programId: e.target.value }) : setProgramId(e.target.value)
+      }
       aria-label="Major"
     >
       {programs.map((p) => (
@@ -98,22 +110,13 @@ export default function App() {
     </select>
   )
 
-  const whatIfToggle = (
-    <button
-      role="switch"
-      aria-checked={whatIf}
-      onClick={() => (whatIf ? setWhatIf(false) : startWhatIf())}
-      className={`flex w-full items-center justify-between gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
-        whatIf ? 'bg-burnt/15 text-burnt-soft' : 'text-muted hover:bg-raised hover:text-ink'
-      }`}
-    >
-      What-if mode
-      <span className={`relative h-5 w-9 rounded-full transition-colors ${whatIf ? 'bg-burnt' : 'bg-line'}`}>
-        <span
-          className={`absolute top-0.5 size-4 rounded-full bg-white transition-all ${whatIf ? 'left-[18px]' : 'left-0.5'}`}
-        />
-      </span>
-    </button>
+  const modeSwitch = (
+    <section aria-labelledby="modes-heading">
+      <h2 id="modes-heading" className="mb-2 text-xs font-medium uppercase tracking-wide text-faint">
+        Modes
+      </h2>
+      <ModeSwitch mode={mode} onChange={switchMode} />
+    </section>
   )
 
   const tabs: [Tab, string][] = [
@@ -193,7 +196,6 @@ export default function App() {
             </div>
           ))}
         </nav>
-        <div className="mt-6">{whatIfToggle}</div>
         <p className="mt-auto text-xs leading-relaxed text-faint">
           Unofficial planning tool. Always check your official DARS and talk with your advisor. Your courses stay in
           this browser.
@@ -204,11 +206,12 @@ export default function App() {
         <header className="space-y-3 border-b border-line bg-panel p-4 lg:hidden">
           <Brand />
           {majorSelect}
-          {whatIfToggle}
           {tabSwitch}
         </header>
 
         <main className="mx-auto max-w-7xl space-y-6 p-4 lg:p-8">
+          {modeSwitch}
+
           {tab === 'audit' && (
             <div id="overview" className="flex scroll-mt-6 items-center justify-between gap-3">
               <h1 className="text-2xl font-semibold tracking-tight">Overview</h1>
@@ -236,48 +239,51 @@ export default function App() {
             </div>
           )}
 
-          {whatIf && (
-            <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-burnt/40 bg-burnt/10 px-4 py-3 text-sm">
-              <span className="text-burnt-soft">
-                <b className="font-semibold">What-if mode.</b> Changes here are a separate plan and don't touch your
-                real courses.
-              </span>
-              <span className="flex gap-2">
-                <button className="rounded-lg border border-burnt/40 px-3 py-1 hover:bg-burnt/15" onClick={resetPlan}>
-                  Reset plan
-                </button>
-                <button className="rounded-lg bg-burnt px-3 py-1 font-medium text-black" onClick={() => setWhatIf(false)}>
-                  Exit
-                </button>
-              </span>
-            </div>
+          {mode === 'whatif' && (
+            <ModeBanner
+              title="What-if mode."
+              text="Change grades, add a retake, or try another major from the menu. Nothing is saved, and it resets when you leave."
+              action="Reset"
+              onAction={() => setWhatIf({ courses, programId: realProgram.id })}
+            />
+          )}
+          {mode === 'planner' && (
+            <ModeBanner
+              tone="planner"
+              title="Planner."
+              text="Add future semesters and drag courses between them. Your plan is saved in this browser and never changes your real courses."
+              action="Clear plan"
+              onAction={clearPlan}
+            />
           )}
 
           {tab === 'audit' ? (
             <>
-              <StatTiles audit={audit} whatIf={whatIf} />
+              <StatTiles audit={audit} planning={mode === 'planner'} />
 
               <div className="grid gap-6 lg:grid-cols-3">
                 <div id="requirements" className="scroll-mt-6 lg:col-span-2">
                   <AuditView
                     audit={audit}
                     titles={titles}
-                    whatIf={whatIf}
+                    planning={mode === 'planner'}
                     planTerms={futureTerms}
-                    onPlan={(code, term) => {
-                      setPlan((p) => [...(p ?? courses), { code, term, credits: 3, grade: PLANNED }])
-                    }}
+                    onPlan={
+                      mode === 'planner'
+                        ? (code, term) => setPlanned((p) => [...p, { code, term, credits: 3, grade: PLANNED }])
+                        : undefined
+                    }
                   />
                 </div>
                 <div className="space-y-6">
                   <ProgressGauge audit={audit} />
-                  {!whatIf && (
+                  {mode === 'current' && (
                     <ImportDars
                       program={program}
                       onImport={(imported) => {
                         setCourses(imported)
-                        setPlan(imported)
-                        setPlanTerms([])
+                        // Planned courses that now show up on the DARS aren't planned anymore.
+                        setPlanned((p) => p.filter((c) => !imported.some((i) => i.code === c.code)))
                       }}
                     />
                   )}
@@ -296,8 +302,14 @@ export default function App() {
               <div id="semesters" className="scroll-mt-6">
                 <SemesterBoard
                   courses={active}
-                  onChange={whatIf ? setPlan : setCourses}
-                  whatIf={whatIf}
+                  onChange={
+                    mode === 'whatif'
+                      ? (next) => setWhatIf({ programId: program.id, courses: next })
+                      : mode === 'planner'
+                        ? (next) => setPlanned(next.filter((c) => c.grade === PLANNED))
+                        : setCourses
+                  }
+                  mode={mode}
                   extraTerms={planTerms}
                   onExtraTerms={setPlanTerms}
                 />
@@ -309,7 +321,7 @@ export default function App() {
               expected={expected}
               onExpected={setExpected}
               creditsToGo={Math.max(0, audit.totalCredits.required - audit.totalCredits.earned - audit.totalCredits.inProgress)}
-              whatIf={whatIf}
+              planning={mode === 'planner'}
             />
           )}
 
@@ -333,6 +345,71 @@ function Brand() {
         <div className="font-semibold leading-tight">Major Helper</div>
         <div className="text-xs text-faint">Degree audit and planner</div>
       </div>
+    </div>
+  )
+}
+
+const MODES: [Mode, string][] = [
+  ['whatif', 'What-If'],
+  ['current', 'Current'],
+  ['planner', 'Planner'],
+]
+
+/** One long three-way switch, with a thumb that slides to the picked mode. */
+function ModeSwitch({ mode, onChange }: { mode: Mode; onChange: (mode: Mode) => void }) {
+  const index = MODES.findIndex(([id]) => id === mode)
+  return (
+    <div role="radiogroup" aria-label="Mode" className="relative grid grid-cols-3 rounded-full border border-line bg-raised p-1 text-sm">
+      <span
+        aria-hidden
+        className={`absolute inset-y-1 left-1 w-[calc((100%-0.5rem)/3)] rounded-full shadow-md transition-all duration-300 ease-out motion-reduce:transition-none ${
+          mode === 'current' ? 'bg-line' : mode === 'whatif' ? 'bg-burnt shadow-burnt/30' : 'bg-maroon shadow-maroon/40'
+        }`}
+        style={{ transform: `translateX(${index * 100}%)` }}
+      />
+      {MODES.map(([id, label]) => (
+        <button
+          key={id}
+          role="radio"
+          aria-checked={mode === id}
+          onClick={() => onChange(id)}
+          className={`relative rounded-full px-3 py-2 font-medium transition-colors ${
+            mode === id ? (id === 'whatif' ? 'text-black' : 'text-white') : 'text-muted hover:text-ink'
+          }`}
+        >
+          {label}
+        </button>
+      ))}
+    </div>
+  )
+}
+
+interface BannerProps {
+  tone?: 'whatif' | 'planner'
+  title: string
+  text: string
+  action: string
+  onAction: () => void
+}
+
+/** The strip under the Overview heading saying which mode is on, colored to match the switch. */
+function ModeBanner({ tone = 'whatif', title, text, action, onAction }: BannerProps) {
+  const planner = tone === 'planner'
+  return (
+    <div
+      className={`flex flex-wrap items-center justify-between gap-3 rounded-xl border px-4 py-3 text-sm ${
+        planner ? 'border-maroon-bright/60 bg-maroon/15' : 'border-burnt/40 bg-burnt/10'
+      }`}
+    >
+      <span className={planner ? 'text-ink' : 'text-burnt-soft'}>
+        <b className="font-semibold">{title}</b> {text}
+      </span>
+      <button
+        className={`rounded-lg border px-3 py-1 ${planner ? 'border-maroon-bright/60 hover:bg-maroon/30' : 'border-burnt/40 hover:bg-burnt/15'}`}
+        onClick={onAction}
+      >
+        {action}
+      </button>
     </div>
   )
 }

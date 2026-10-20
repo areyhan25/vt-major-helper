@@ -4,7 +4,7 @@ const LETTER_ORDER = ['F', 'D-', 'D', 'D+', 'C-', 'C', 'C+', 'B-', 'B', 'B+', 'A
 const PASSING_NON_LETTER = new Set(['AP', 'TR', 'P', 'S', 'CR', 'T'])
 
 export const IN_PROGRESS = 'IP'
-/** A course planned for a future semester in What-if mode. Audited like an in-progress course. */
+/** A course planned for a future semester in Planner mode. Audited like an in-progress course. */
 export const PLANNED = 'PL'
 
 export function isInProgress(grade: string): boolean {

@@ -19,14 +19,14 @@ export function Chip({ status, label }: { status: Status; label?: string }) {
 }
 
 /** The key for the status dots. */
-export function StatusKey({ whatIf }: { whatIf: boolean }) {
+export function StatusKey({ planning }: { planning: boolean }) {
   return (
     <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted">
       <span className="flex items-center gap-1.5">
         <Dot status="done" /> Done
       </span>
       <span className="flex items-center gap-1.5">
-        <Dot status="in-progress" /> {whatIf ? 'In progress or planned' : 'In progress'}
+        <Dot status="in-progress" /> {planning ? 'In progress or planned' : 'In progress'}
       </span>
       <span className="flex items-center gap-1.5">
         <Dot status="needed" /> Still needed

@@ -21,13 +21,14 @@ interface Props {
   onExpected: (expected: ExpectedGrades) => void
   /** Credits left in the degree after current courses, from the audit. */
   creditsToGo: number
-  whatIf: boolean
+  /** Planner mode, where planned courses count too. */
+  planning: boolean
 }
 
 const selectClass =
   'rounded-lg border border-line bg-page px-2 py-1 text-sm text-ink focus:border-burnt focus:outline-none'
 
-export function GpaView({ courses, expected, onExpected, creditsToGo, whatIf }: Props) {
+export function GpaView({ courses, expected, onExpected, creditsToGo, planning }: Props) {
   const current = computeGpa(courses)
   const projected = computeGpa(courses, expected)
   const pending = courses.filter((c) => isInProgress(c.grade)).sort((a, b) => termOrder(a.term) - termOrder(b.term))
@@ -57,7 +58,7 @@ export function GpaView({ courses, expected, onExpected, creditsToGo, whatIf }: 
       <div>
         <h1 className="text-2xl font-semibold tracking-tight">GPA calculator</h1>
         <p className="mt-1 text-sm text-muted">
-          Worked out from your courses. Pick expected grades for {whatIf ? 'in-progress and planned' : 'in-progress'}{' '}
+          Worked out from your courses. Pick expected grades for {planning ? 'in-progress and planned' : 'in-progress'}{' '}
           courses to see where your GPA is headed.
         </p>
       </div>
@@ -112,9 +113,9 @@ export function GpaView({ courses, expected, onExpected, creditsToGo, whatIf }: 
               <p className="mt-4 text-sm text-faint">
                 {courses.length === 0
                   ? 'No courses yet. Import your DARS or add courses on the Degree audit tab.'
-                  : whatIf
+                  : planning
                     ? 'No in-progress or planned courses. Plan some on the Degree audit tab.'
-                    : 'No in-progress courses. Turn on What-if mode to plan future semesters.'}
+                    : 'No in-progress courses. Switch to Planner to plan future semesters.'}
               </p>
             ) : (
               <ul className="mt-4 divide-y divide-line">

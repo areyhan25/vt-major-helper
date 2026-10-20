@@ -1,12 +1,12 @@
 import type { AuditResult } from '../engine/audit'
 import { Panel } from './ui'
 
-export function StatTiles({ audit, whatIf }: { audit: AuditResult; whatIf: boolean }) {
+export function StatTiles({ audit, planning }: { audit: AuditResult; planning: boolean }) {
   const { earned, inProgress, required } = audit.totalCredits
   const met = audit.sections.filter((s) => s.result.status === 'done').length
   const tiles = [
     { label: 'Credits earned', value: earned, sub: `of ${required} required` },
-    { label: whatIf ? 'In progress + planned' : 'In progress', value: inProgress, sub: 'credits' },
+    { label: planning ? 'In progress + planned' : 'In progress', value: inProgress, sub: 'credits' },
     { label: 'Credits to go', value: Math.max(0, required - earned - inProgress), sub: 'after current courses' },
     { label: 'Requirement blocks met', value: `${met}/${audit.sections.length}`, sub: 'sections done' },
   ]

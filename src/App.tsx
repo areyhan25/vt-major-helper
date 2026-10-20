@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { AuditView } from './components/AuditView'
+import { GpaView } from './components/GpaView'
 import { ImportDars } from './components/ImportDars'
 import { ProgressGauge, StatTiles } from './components/Overview'
 import { SemesterBoard } from './components/SemesterBoard'
@@ -9,7 +10,7 @@ import { runAudit } from './engine/audit'
 import { PLANNED } from './engine/grades'
 import { termOrder, termsAfter } from './engine/terms'
 import type { TakenCourse } from './engine/types'
-import { load, save } from './storage'
+import { load, save, type Tab } from './storage'
 
 export default function App() {
   const [saved] = useState(load)
@@ -19,10 +20,12 @@ export default function App() {
   // null until What-if mode is first opened, then a separate copy of the courses.
   const [plan, setPlan] = useState<TakenCourse[] | null>(saved.plan ?? null)
   const [planTerms, setPlanTerms] = useState<string[]>(saved.planTerms ?? [])
+  const [tab, setTab] = useState<Tab>(saved.tab ?? 'audit')
+  const [expected, setExpected] = useState(saved.expected ?? {})
 
   useEffect(
-    () => save({ programId, courses, plan: plan ?? undefined, planTerms, whatIf }),
-    [programId, courses, plan, planTerms, whatIf],
+    () => save({ programId, courses, plan: plan ?? undefined, planTerms, whatIf, tab, expected }),
+    [programId, courses, plan, planTerms, whatIf, tab, expected],
   )
 
   const program = programs.find((p) => p.id === programId) ?? programs[0]
@@ -88,6 +91,29 @@ export default function App() {
     </button>
   )
 
+  const tabs: [Tab, string][] = [
+    ['audit', 'Degree audit'],
+    ['gpa', 'GPA calculator'],
+  ]
+
+  const tabSwitch = (
+    <div role="tablist" aria-label="View" className="grid grid-cols-2 gap-1 rounded-lg bg-raised p-1 text-sm">
+      {tabs.map(([id, label]) => (
+        <button
+          key={id}
+          role="tab"
+          aria-selected={tab === id}
+          onClick={() => setTab(id)}
+          className={`rounded-md px-3 py-1.5 font-medium transition-colors ${
+            tab === id ? 'bg-burnt text-black' : 'text-muted hover:text-ink'
+          }`}
+        >
+          {label}
+        </button>
+      ))}
+    </div>
+  )
+
   return (
     <div className="flex min-h-screen">
       <aside className="sticky top-0 hidden h-screen w-72 shrink-0 flex-col border-r border-line bg-panel p-5 lg:flex">
@@ -98,14 +124,35 @@ export default function App() {
         </div>
         <nav className="mt-8 space-y-1 text-sm">
           <div className="mb-2 text-xs font-medium uppercase tracking-wide text-faint">View</div>
-          {[
-            ['#overview', 'Overview'],
-            ['#requirements', 'Requirements'],
-            ['#semesters', 'Semesters'],
-          ].map(([href, label]) => (
-            <a key={href} href={href} className="block rounded-lg px-3 py-2 text-muted hover:bg-raised hover:text-ink">
-              {label}
-            </a>
+          {tabs.map(([id, label]) => (
+            <div key={id}>
+              <button
+                onClick={() => setTab(id)}
+                aria-current={tab === id ? 'page' : undefined}
+                className={`block w-full rounded-lg px-3 py-2 text-left ${
+                  tab === id ? 'bg-raised font-medium text-ink' : 'text-muted hover:bg-raised hover:text-ink'
+                }`}
+              >
+                {label}
+              </button>
+              {id === 'audit' && tab === 'audit' && (
+                <div className="ml-3 border-l border-line pl-2">
+                  {[
+                    ['#overview', 'Overview'],
+                    ['#requirements', 'Requirements'],
+                    ['#semesters', 'Semesters'],
+                  ].map(([href, label]) => (
+                    <a
+                      key={href}
+                      href={href}
+                      className="block rounded-lg px-3 py-1.5 text-muted hover:bg-raised hover:text-ink"
+                    >
+                      {label}
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
           ))}
         </nav>
         <div className="mt-6">{whatIfToggle}</div>
@@ -120,12 +167,15 @@ export default function App() {
           <Brand />
           {majorSelect}
           {whatIfToggle}
+          {tabSwitch}
         </header>
 
         <main className="mx-auto max-w-7xl space-y-6 p-4 lg:p-8">
-          <div id="overview" className="scroll-mt-6">
-            <h1 className="hidden text-2xl font-semibold tracking-tight lg:block">Overview</h1>
-          </div>
+          {tab === 'audit' && (
+            <div id="overview" className="scroll-mt-6">
+              <h1 className="hidden text-2xl font-semibold tracking-tight lg:block">Overview</h1>
+            </div>
+          )}
 
           {whatIf && (
             <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-burnt/40 bg-burnt/10 px-4 py-3 text-sm">
@@ -144,54 +194,66 @@ export default function App() {
             </div>
           )}
 
-          <StatTiles audit={audit} whatIf={whatIf} />
+          {tab === 'audit' ? (
+            <>
+              <StatTiles audit={audit} whatIf={whatIf} />
 
-          <div className="grid gap-6 lg:grid-cols-3">
-            <div id="requirements" className="scroll-mt-6 lg:col-span-2">
-              <AuditView
-                audit={audit}
-                titles={titles}
-                whatIf={whatIf}
-                planTerms={futureTerms}
-                onPlan={(code, term) => {
-                  setPlan((p) => [...(p ?? courses), { code, term, credits: 3, grade: PLANNED }])
-                }}
-              />
-            </div>
-            <div className="space-y-6">
-              <ProgressGauge audit={audit} />
-              {!whatIf && (
-                <ImportDars
-                  program={program}
-                  onImport={(imported, matched) => {
-                    setCourses(imported)
-                    setPlan(imported)
-                    setPlanTerms([])
-                    if (matched) setProgramId(matched.id)
-                  }}
+              <div className="grid gap-6 lg:grid-cols-3">
+                <div id="requirements" className="scroll-mt-6 lg:col-span-2">
+                  <AuditView
+                    audit={audit}
+                    titles={titles}
+                    whatIf={whatIf}
+                    planTerms={futureTerms}
+                    onPlan={(code, term) => {
+                      setPlan((p) => [...(p ?? courses), { code, term, credits: 3, grade: PLANNED }])
+                    }}
+                  />
+                </div>
+                <div className="space-y-6">
+                  <ProgressGauge audit={audit} />
+                  {!whatIf && (
+                    <ImportDars
+                      program={program}
+                      onImport={(imported, matched) => {
+                        setCourses(imported)
+                        setPlan(imported)
+                        setPlanTerms([])
+                        if (matched) setProgramId(matched.id)
+                      }}
+                    />
+                  )}
+                  {audit.unused.length > 0 && (
+                    <Panel className="p-5">
+                      <div className="text-sm text-muted">Free electives</div>
+                      <p className="mt-2 text-sm">
+                        These count toward total credits but not a specific requirement:
+                      </p>
+                      <p className="mt-2 text-sm font-medium">{audit.unused.map((c) => c.code).join(', ')}</p>
+                    </Panel>
+                  )}
+                </div>
+              </div>
+
+              <div id="semesters" className="scroll-mt-6">
+                <SemesterBoard
+                  courses={active}
+                  onChange={whatIf ? setPlan : setCourses}
+                  whatIf={whatIf}
+                  extraTerms={planTerms}
+                  onExtraTerms={setPlanTerms}
                 />
-              )}
-              {audit.unused.length > 0 && (
-                <Panel className="p-5">
-                  <div className="text-sm text-muted">Free electives</div>
-                  <p className="mt-2 text-sm">
-                    These count toward total credits but not a specific requirement:
-                  </p>
-                  <p className="mt-2 text-sm font-medium">{audit.unused.map((c) => c.code).join(', ')}</p>
-                </Panel>
-              )}
-            </div>
-          </div>
-
-          <div id="semesters" className="scroll-mt-6">
-            <SemesterBoard
+              </div>
+            </>
+          ) : (
+            <GpaView
               courses={active}
-              onChange={whatIf ? setPlan : setCourses}
+              expected={expected}
+              onExpected={setExpected}
+              creditsToGo={Math.max(0, audit.totalCredits.required - audit.totalCredits.earned - audit.totalCredits.inProgress)}
               whatIf={whatIf}
-              extraTerms={planTerms}
-              onExtraTerms={setPlanTerms}
             />
-          </div>
+          )}
 
           <p className="pb-4 text-xs text-faint lg:hidden">
             Unofficial planning tool. Always check your official DARS and talk with your advisor. Your courses stay in

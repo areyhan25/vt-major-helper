@@ -1,6 +1,7 @@
 import { useId, useState } from 'react'
 import type { Program } from '../engine/types'
 import hokieBird from '../assets/hokie-bird.png'
+import vtLogo from '../assets/vt-logo-white.svg'
 
 /** Short name a student might type, from the DARS code: "BSCS CS" becomes "CS". */
 function abbreviation(p: Program) {
@@ -41,9 +42,7 @@ export function Welcome({ programs, onPick }: { programs: Program[]; onPick: (id
 
   return (
     <div className="flex min-h-screen flex-col items-center px-4 pt-[10vh] pb-8">
-      <div className="grid size-14 place-items-center rounded-full bg-gradient-to-br from-maroon to-burnt text-lg font-bold text-white shadow-lg shadow-maroon/30">
-        VT
-      </div>
+      <img src={vtLogo} alt="Virginia Tech" className="h-12 w-auto select-none" draggable={false} />
       <h1 className="mt-6 text-center text-4xl font-semibold tracking-tight sm:text-5xl">Virginia Tech Major Helper</h1>
       <p className="mt-3 text-center text-base text-muted sm:text-lg">A tool to help you manage and plan your courses.</p>
 
@@ -138,9 +137,7 @@ export function Welcome({ programs, onPick }: { programs: Program[]; onPick: (id
 export function MajorLoading({ program }: { program: Program }) {
   return (
     <div role="status" className="flex min-h-screen flex-col items-center justify-center px-4">
-      <div className="grid size-14 animate-pulse place-items-center rounded-full bg-gradient-to-br from-maroon to-burnt text-lg font-bold text-white shadow-lg shadow-maroon/30">
-        VT
-      </div>
+      <img src={vtLogo} alt="Virginia Tech" className="h-12 w-auto animate-pulse select-none" draggable={false} />
       <div className="mt-6 text-center text-2xl font-semibold tracking-tight">{program.name}</div>
       <div className="mt-1 text-sm text-muted">Setting up your degree audit…</div>
       <div className="mt-6 h-1.5 w-64 max-w-full overflow-hidden rounded-full bg-raised">

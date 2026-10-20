@@ -1,0 +1,32 @@
+{
+ "subject": "School of Plant & Environmental Science (SPES)",
+ "source": "https://catalog.vt.edu/course-descriptions/spes/",
+ "scrapedAt": "2026-10-20",
+ "courses": {
+  "SPES 0984": {"title":"Special Study","credits":"1-19 credits"},
+  "SPES 1004": {"title":"First Year Seminar","credits":"1 credit","description":"Exploration of topics related to the School of Plant and Environmental Sciences from a multidisciplinary perspective focusing on communication and teamwork, problem-solving, inquiry, and digital literacy."},
+  "SPES 1984": {"title":"Special Study","credits":"1-19 credits"},
+  "SPES 2004": {"title":"Cannabis - Science, Industry, and Culture","credits":"3 credits","description":"Major crops in the genus Cannabis (hemp and marijuana). Historical development, botanical aspects, and current research. Medicinal, recreational and industrial products and their use. Legal, cultural, political and socioeconomic issues surrounding cannabis crops."},
+  "SPES 2014": {"title":"Professional Development Skills","credits":"1 credit","description":"Professional development skills and planning for undergraduates in the School of Plant and Environmental Sciences (SPES). Explore career opportunities and resources available at Virginia Tech. Improve professional communication skills, resume and cover letter writing, and learning plans for experiential learning opportunities.","prereq":"SPES 1004"},
+  "SPES 2244": {"title":"World Crops: Food and Culture","credits":"3 credits","description":"How to feed the world in 2050, world crops, primary regions of production, factors that determine where they are grown, economic importance, and use in the human diet. Linkage between food and culture, recipe preparation, and their role in defining who we are, where we come from, and what we have experienced along the way. Tracing of food migration and the African, Caribbean, Asian, Latin American, and European influence on the American cuisine. The universality of food and how every single culture and religion uses food as part of the celebration of life, death, and many cultural events."},
+  "SPES 2964": {"title":"Field Study","credits":"1-19 credits"},
+  "SPES 2974": {"title":"Independent Study","credits":"1-19 credits"},
+  "SPES 2984": {"title":"Special Study","credits":"1-19 credits"},
+  "SPES 3900": {"title":"Bridge Experience","credits":"0 credits","description":"Application of academic knowledge and skills to in a work-based experience aligned with post-graduation goals using research-based learning processes. Satisfactory completion of work-based experience often in the form of internship, undergraduate research, co-op, or study abroad; self-evaluation; reflection; and showcase of learning. Pre: Departmental approval of 3900 plan."},
+  "SPES 3954": {"title":"Study Abroad","credits":"1-19 credits"},
+  "SPES 3984": {"title":"Special Study","credits":"1-19 credits"},
+  "SPES 4014": {"title":"Career Development and Planning","credits":"1 credit","description":"Professional development and skills gained during School of Plant and Environmental Sciences (SPES) experiential learning program. Linking experiential learning to future career planning and selection. Reflection on SPES curriculum and experiential learning as a path to fulfilling career goals. Explore role of mentoring and leadership in career development.","prereq":"SPES 2014"},
+  "SPES 4114": {"title":"Topics: StudyAway: Production, Culture and Social Aspects US Agriculture","credits":"3 credits","description":"Experiential learning, hands-on and face-to-face experience with agricultural industries involved in food production, marketing and consumption. Comparative analysis of agriculture production history, practices and constraints in different regions of the US. The course has two components. One; the in-class (onsite) discussion, analysis, and comparison of the diverse agricultural production systems between Virginia and, two; the studying “away” part (Example, California, Arizona, the Mississippi Delta). Pre: Junior standing."},
+  "SPES 4964": {"title":"Field Study","credits":"1-19 credits"},
+  "SPES 4974": {"title":"Independent Study","credits":"1-19 credits"},
+  "SPES 4984": {"title":"Special Study","credits":"1-19 credits"},
+  "SPES 4994": {"title":"Undergraduate Research","credits":"1-19 credits"},
+  "SPES 5004": {"title":"Graduate Seminar Plant and Environmental Sciences","credits":"1 credit","description":"Presentation, analysis and evaluation of research within the School of Plant and Environmental Sciences covering topics in Crop and Soil Science, Ecological Restoration, Environmental Science, Horticulture/Turfgrass Science, Plant Breeding and Biotechnology, and Plant Pathology and Weed Science. May be repeated one time for a maximum of 2 credits. Pre: Graduate standing.","repeatability":"up to 2 credit hours"},
+  "SPES 5904": {"title":"Project and Report","credits":"1-19 credits"},
+  "SPES 5974": {"title":"Independent Study","credits":"1-19 credits"},
+  "SPES 5984": {"title":"Special Study","credits":"1-19 credits"},
+  "SPES 5994": {"title":"Research and Thesis","credits":"1-19 credits"},
+  "SPES 6984": {"title":"Special Study","credits":"1-19 credits"},
+  "SPES 7994": {"title":"Research and Dissertation","credits":"1-19 credits"}
+ }
+}

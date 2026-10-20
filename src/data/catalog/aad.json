@@ -1,0 +1,22 @@
+{
+ "subject": "Architecture, Arts, and Design (AAD)",
+ "source": "https://catalog.vt.edu/course-descriptions/aad/",
+ "scrapedAt": "2026-10-20",
+ "courses": {
+  "AAD 1004": {"title":"Exploring Architecture, Arts, and Design","credits":"2 credits","description":"First-Year Experience course for Explore AAD majors. Overview of the college and its degrees, majors and minors, and career opportunities available to CAUS graduates. Presents college and university resources and services that support student success. Introduces students to the basic principles of the research process by focusing on inquiry, problem-solving, and integration of ideas and experiences within the fields in the College of Architecture, Arts, and Design."},
+  "AAD 1204": {"title":"Thinking Globally","credits":"1 credit","description":"Seminar for first-year students enrolled in Rhizome Living-Learning Community. Introduction to history and theory of sustainable design in a global context. Investigations of works of sustainable design. Introduction to history and aims of United Nations Sustainable Development Goals (SDGS)."},
+  "AAD 1214": {"title":"Acting Locally","credits":"2 credits","description":"Course for first-year students enrolled in Rhizome Living-Learning Community. Project-based learning through student-client collaborations. Applies design history concepts and United Nations Sustainable Development Goals. Integrate diverse community perspectives. Introduces design thinking as a model for problem solving, including problem definition and iteration. Student presentations, proposal development, exhibition, client feedback and peer critiques.","prereq":"AAD 1204"},
+  "AAD 1984": {"title":"Special Study","credits":"1-19 credits"},
+  "AAD 2974": {"title":"Independent Study","credits":"1-19 credits"},
+  "AAD 2984": {"title":"Special Study","credits":"1-19 credits"},
+  "AAD 3900": {"title":"Bridge Experience","credits":"0 credits","description":"Application of academic knowledge and skills to in a work-based experience aligned with post-graduation goals using research-based learning processes. Satisfactory completion of work-based experience often in the form of internship, undergraduate research, co-op, or study abroad; self-evaluation; reflection; and showcase of learning. Pre: Departmental approval of 3900 plan."},
+  "AAD 3954": {"title":"Study Abroad","credits":"1-19 credits"},
+  "AAD 3974": {"title":"Independent Study","credits":"1-19 credits"},
+  "AAD 3984": {"title":"Special Study","credits":"1-19 credits"},
+  "AAD 3984L": {"title":"Special Study","credits":"1-19 credits"},
+  "AAD 3984M": {"title":"Special Study","credits":"3 credits"},
+  "AAD 4234": {"title":"Capstone Collaborations: Cross-Disciplinary Teams","credits":"3 credits","description":"Collaborative cross-disciplinary research teams support discipline-specific capstones. Analyzes the interactive relationships between place, space, identity, and community in the United States and beyond. Engages in iterative research processes through reflective teamwork addressing complex problems in senior capstone projects. Synthesizes multiple, complex sources and creates coherent arguments including ethical analyses."},
+  "AAD 4954": {"title":"Study Abroad","credits":"1-19 credits"},
+  "AAD 5954": {"title":"Study Abroad","credits":"1-19 credits"}
+ }
+}

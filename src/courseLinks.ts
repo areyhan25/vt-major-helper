@@ -2,7 +2,7 @@
 export function catalogUrl(code: string): string {
   const [subj, num] = code.split(' ')
   if (!num || /[*X]/.test(num)) {
-    return `https://catalog.vt.edu/undergraduate/course-descriptions/${subj.toLowerCase()}/`
+    return `https://catalog.vt.edu/course-descriptions/${subj.toLowerCase()}/`
   }
   return `https://catalog.vt.edu/search/?P=${encodeURIComponent(code)}`
 }

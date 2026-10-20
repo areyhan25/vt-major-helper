@@ -1,0 +1,30 @@
+{
+ "subject": "Consumer Studies (CONS)",
+ "source": "https://catalog.vt.edu/course-descriptions/cons/",
+ "scrapedAt": "2026-10-20",
+ "courses": {
+  "CONS 2304": {"title":"Consumer and Family Finances","credits":"3 credits","description":"Overview of consumer and family finances, including budgeting, goal setting, cash management, credit, insurance, taxes, housing, investment alternatives, and retirement plans. Fundamental tools for financial decision making through the coverage of time value of money, calculations for consumer loans, and tools for financial decisions across the lifecycle. Explore ethical issues surrounding financial decisions."},
+  "CONS 2964": {"title":"Field Work/Practicum","credits":"1-19 credits"},
+  "CONS 2974": {"title":"Independent Study","credits":"1-19 credits"},
+  "CONS 2974H": {"title":"Indepdendent Study","credits":"1-19 credits"},
+  "CONS 2984": {"title":"Special Study","credits":"1-19 credits"},
+  "CONS 3404": {"title":"Consumer Education Strategies","credits":"3 credits","description":"Analysis of the role of effective consumer education strategies in consumer decision-making. Planning, developing, testing, and evaluating consumer education programs using a variety of strategies, including social marketing, for selected community partners and operating the Consumer Education Laboratory.","prereq":"AHRM 2404"},
+  "CONS 3504": {"title":"Resource Management for Individuals and Families","credits":"3 credits","description":"Introduction to resource management concepts and theories with application to personal and family life goals. Discussion of values, goals, decision making, planning, and communication in relation to the management process. Application of the management process to the use of resources, time, finances, stress, and the environment.","prereq":"CONS 2304 and AHRM 2404"},
+  "CONS 3900": {"title":"Bridge Experience","credits":"0 credits","description":"Application of academic knowledge and skills in a work-based experience aligned with post-graduation goals using research-based learning processes. Satisfactory completion of work-based experience often in the form of internship, undergraduate research, co-op, or study abroad; self-evaluation; reflection; and showcase of learning. Pre: Department approval of 3900 plan."},
+  "CONS 3954": {"title":"Study Abroad","credits":"1-19 credits"},
+  "CONS 3984": {"title":"Special Study","credits":"1-19 credits"},
+  "CONS 4304": {"title":"Advanced Consumer Family Finances","credits":"3 credits","description":"Advanced financial topics for consumers and families. Identification of employee benefit components including health care, incentive plans, insurance, and retirement. Analysis of consumers insurance needs. Discussion and comparison of retirement and investment tools used by consumers, including public and private retirement components. Interpretation of research directions and policy influences related to employee benefits, insurance, investments, and retirement saving. Investigation of special topics in retirement. Pre: Senior Standing.","prereq":"CONS 2304"},
+  "CONS 4314": {"title":"Debtor-Creditor Relationships","credits":"3 credits","description":"Examination of legal and operational aspects of debtor-creditor relationship from the perspective of businesses and debtors. Overview of the types of credit, access to credit, factors contributing to debt problems, and alternatives available for resolution. Focus on collection processes of federal and state bankruptcy laws and regulations.","prereq":"CONS 2304 and AHRM 2404"},
+  "CONS 4324": {"title":"Financial Counseling","credits":"3 credits","description":"Examination of debt and budgeting problems affecting families. Utilizes a problem-solving approach. Includes financial counseling strategies for coping with financial crises and becoming proactive in family financial management.","prereq":"CONS 2304"},
+  "CONS 4404": {"title":"Consumer Protection","credits":"3 credits","description":"Analysis of the effectiveness of consumer protection efforts. Examination of government laws, regulations, and agencies at the federal, state, and local levels, as well as the effectiveness of both business and private consumer protection efforts.","prereq":"AHRM 2404 and CONS 2304"},
+  "CONS 4414": {"title":"Professionalism in Consumer Affairs","credits":"3 credits","description":"Roles, functions and responsibilites of consumer affairs professionals employed in business, government, and non-profit public/consumer interest organizations. Professional advocacy within employing organizations, managing consumer complaint handling systems and major consumer and career issues are analyzed.","prereq":"AHRM 2404"},
+  "CONS 4964": {"title":"Field Work/Practicum","credits":"1-19 credits"},
+  "CONS 4964H": {"title":"Field Work/Practicum","credits":"1-19 credits"},
+  "CONS 4974": {"title":"Independent Study","credits":"1-19 credits"},
+  "CONS 4974H": {"title":"Independent Study","credits":"1-19 credits"},
+  "CONS 4984": {"title":"Special Study","credits":"1-19 credits"},
+  "CONS 4984H": {"title":"Special Study","credits":"1-19 credits"},
+  "CONS 4994": {"title":"Undergraduate Research","credits":"1-19 credits"},
+  "CONS 4994H": {"title":"Undergraduate Research","credits":"1-19 credits"}
+ }
+}

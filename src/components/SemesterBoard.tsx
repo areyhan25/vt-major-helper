@@ -5,7 +5,7 @@ import { PRIOR, semesterKeyFor } from '../engine/semesters'
 import { termLabel, termOrder, termsAfter } from '../engine/terms'
 import type { TakenCourse } from '../engine/types'
 import { inputClass } from './styles'
-import { Panel, Popover } from './ui'
+import { Chevron, Panel, Popover } from './ui'
 
 const GRADES = ['A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'D-', 'F', 'P', 'AP', 'TR', 'IP', 'W']
 
@@ -29,6 +29,8 @@ export function SemesterBoard({ courses, onChange, whatIf, extraTerms, onExtraTe
   const upcoming = termsAfter(last, 6)
   const [dragging, setDragging] = useState<number>()
   const [over, setOver] = useState<string>()
+  const [collapsed, setCollapsed] = useState<Record<string, boolean>>({})
+  const anyOpen = blocks.some((b) => !collapsed[b])
 
   const update = (i: number, patch: Partial<TakenCourse>) =>
     onChange(courses.map((c, j) => (j === i ? { ...c, ...patch } : c)))
@@ -51,11 +53,21 @@ export function SemesterBoard({ courses, onChange, whatIf, extraTerms, onExtraTe
               : 'Your courses, grouped by semester.'}
           </p>
         </div>
-        {courses.length > 0 && !whatIf && (
-          <button className="text-xs text-faint hover:text-needed" onClick={() => onChange([])}>
-            Clear all courses
-          </button>
-        )}
+        <div className="flex items-center gap-4">
+          {blocks.length > 0 && (
+            <button
+              className="text-xs text-muted hover:text-ink"
+              onClick={() => setCollapsed(Object.fromEntries(blocks.map((b) => [b, anyOpen])))}
+            >
+              {anyOpen ? 'Collapse all' : 'Expand all'}
+            </button>
+          )}
+          {courses.length > 0 && !whatIf && (
+            <button className="text-xs text-faint hover:text-needed" onClick={() => onChange([])}>
+              Clear all courses
+            </button>
+          )}
+        </div>
       </div>
 
       <AddCourse
@@ -74,6 +86,7 @@ export function SemesterBoard({ courses, onChange, whatIf, extraTerms, onExtraTe
             const inTerm = courses.map((c, i) => ({ c, i })).filter(({ c }) => keyOf(c) === term)
             const credits = inTerm.reduce((n, { c }) => n + c.credits, 0)
             const planned = inTerm.some(({ c }) => c.grade === 'PL')
+            const open = !collapsed[term]
             return (
               <div
                 key={term}
@@ -88,17 +101,25 @@ export function SemesterBoard({ courses, onChange, whatIf, extraTerms, onExtraTe
                   over === term ? 'border-burnt bg-burnt/10' : 'border-line'
                 }`}
               >
-                <div className="mb-2 flex items-baseline justify-between">
-                  <h3 className="font-medium">
+                <button
+                  className={`flex w-full items-center gap-2 text-left ${open ? 'mb-2' : ''}`}
+                  aria-expanded={open}
+                  onClick={() => setCollapsed((s) => ({ ...s, [term]: open }))}
+                >
+                  <Chevron open={open} />
+                  <h3 className="min-w-0 flex-1 font-medium">
                     {prior ? 'Transfer & AP credit' : termLabel(term)}
                     {planned && <span className="ml-2 text-xs font-normal text-burnt-soft">planned</span>}
                   </h3>
-                  <span className="text-xs text-faint">{credits} cr</span>
-                </div>
-                {prior && (
+                  <span className="whitespace-nowrap text-xs text-faint">
+                    {!open && `${inTerm.length} ${inTerm.length === 1 ? 'course' : 'courses'} · `}
+                    {credits} cr
+                  </span>
+                </button>
+                {open && prior && (
                   <p className="-mt-1 mb-2 text-xs text-faint">Earned before your first semester at VT</p>
                 )}
-                {inTerm.length === 0 ? (
+                {!open ? null : inTerm.length === 0 ? (
                   <p className="rounded-lg border border-dashed border-line px-3 py-4 text-center text-xs text-faint">
                     Drop courses here
                   </p>

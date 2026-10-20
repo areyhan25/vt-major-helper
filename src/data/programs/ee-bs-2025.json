@@ -6,7 +6,7 @@
   "totalCredits": 120,
   "source": "https://catalog.vt.edu/archive/2025-2026/undergraduate/college-engineering/electrical-computer-engineering/electrical-engineering-bs/",
   "notes": [
-    "Secondary focus is checked as 9 credits of 3000-level and up ECE (plus the listed AOE and CS courses). The single-focus-area rule, the one-4000-level-course rule, and individualized focus plans aren't checked yet.",
+    "Individualized secondary focus plans aren't checked.",
     "Pathways Concept 7 is suspended effective Fall 2025, so it isn't listed.",
     "Free electives, the in-major GPA, and the foreign language requirement aren't checked yet."
   ],
@@ -144,7 +144,7 @@
       "title": "Secondary Focus",
       "bucket": "major",
       "priority": 2,
-      "note": "Any 3 ECE courses at the 3000 level or higher that aren't major courses, with at least one at the 4000 level or higher.",
+      "note": "Any 3 ECE courses at the 3000 level or higher (plus the listed AOE and CS courses) that aren't major courses, with at least one at the 4000 level or higher, all taken A-F.",
       "rule": {
         "type": "credits",
         "label": "Secondary Focus Electives (3 courses)",
@@ -154,7 +154,26 @@
           "ECE 3***", "ECE 4***", "ECE 5***", "AOE 4654", "AOE 4674", "CS 3214", "CS 4224", "CS 4264",
           "CS 4504", "CS 4824"
         ],
-        "exclude": ["ECE 3054", "ECE 3074", "ECE 3254", "ECE 3274", "ECE 3524", "ECE 4944"]
+        "exclude": ["ECE 3054", "ECE 3074", "ECE 3254", "ECE 3274", "ECE 3524", "ECE 4944"],
+        "minimums": [
+          {
+            "courses": 1,
+            "from": ["ECE 4***", "ECE 5***", "AOE 4654", "AOE 4674", "CS 4224", "CS 4264", "CS 4504", "CS 4824"],
+            "label": "At least one secondary focus course must be at the 4000 level or higher."
+          }
+        ],
+        "limits": [
+          {
+            "credits": 6,
+            "from": ["ECE 4974", "ECE 4994"],
+            "label": "At most 6 credits of ECE 4974 and ECE 4994 count toward the secondary focus."
+          },
+          {
+            "credits": 0,
+            "grades": ["P", "S"],
+            "label": "Pass/fail courses don't count; secondary focus courses must be taken A-F."
+          }
+        ]
       }
     },
     {

@@ -1,7 +1,7 @@
 import { countsForCredit, isInProgress, meetsMinGrade } from './grades'
 import { matchesAny, matchesPattern } from './match'
 import { termOrder } from './terms'
-import type { CourseInfo, Program, Rule, Section, TakenCourse } from './types'
+import type { CourseInfo, CreditLimit, CreditMinimum, Program, Rule, Section, TakenCourse } from './types'
 
 export type Status = 'done' | 'in-progress' | 'needed'
 
@@ -80,25 +80,69 @@ function evalRule(rule: Rule, ctx: Ctx, claimed: Set<string>): RuleResult {
             meetsMinGrade(c.grade, rule.minGrade),
         )
         .sort(byCompletion)
+      const minimums = rule.minimums ?? []
+      const limits = rule.limits ?? []
       const used: TakenCourse[] = []
+      /** Credits each used course counts for. A cap can count a course only in part. */
+      const counts = new Map<TakenCourse, number>()
+      const limitUsed = limits.map(() => 0)
+      const capped = new Set<string>()
       let earned = 0
       let inProgress = 0
+
+      const covers = (l: CreditLimit, c: TakenCourse) =>
+        (!l.from || matchesAny(c.code, l.from)) && (!l.grades || l.grades.includes(c.grade))
+      const take = (c: TakenCourse) => {
+        let n = c.credits
+        limits.forEach((l, i) => {
+          if (!covers(l, c) || limitUsed[i] + n <= l.credits) return
+          n = Math.max(0, l.credits - limitUsed[i])
+          capped.add(l.label)
+        })
+        if (n <= 0) return
+        used.push(c)
+        counts.set(c, n)
+        claimed.add(keyOf(c))
+        limits.forEach((l, i) => covers(l, c) && (limitUsed[i] += n))
+        if (isInProgress(c.grade)) inProgress += n
+        else earned += n
+      }
+      const meets = (m: CreditMinimum, withInProgress: boolean) => {
+        const cs = used.filter((c) => matchesAny(c.code, m.from) && (withInProgress || !isInProgress(c.grade)))
+        return cs.reduce((n, c) => n + counts.get(c)!, 0) >= (m.credits ?? 0) && cs.length >= (m.courses ?? 0)
+      }
+
+      // Fill each minimum first, so general picks don't crowd out the courses it needs.
+      for (const m of minimums) {
+        for (const c of candidates) {
+          if (meets(m, true)) break
+          if (!counts.has(c) && matchesAny(c.code, m.from)) take(c)
+        }
+      }
       const minCourses = rule.courses ?? 0
       for (const c of candidates) {
         if (earned + inProgress >= rule.credits && used.length >= minCourses) break
-        used.push(c)
-        claimed.add(keyOf(c))
-        if (isInProgress(c.grade)) inProgress += c.credits
-        else earned += c.credits
+        if (!counts.has(c)) take(c)
       }
+
       const doneCourses = used.filter((c) => !isInProgress(c.grade)).length
       const status: Status =
-        earned >= rule.credits && doneCourses >= minCourses
+        earned >= rule.credits && doneCourses >= minCourses && minimums.every((m) => meets(m, false))
           ? 'done'
-          : earned + inProgress >= rule.credits && used.length >= minCourses
+          : earned + inProgress >= rule.credits && used.length >= minCourses && minimums.every((m) => meets(m, true))
             ? 'in-progress'
             : 'needed'
-      return { rule, status, used, earned, inProgress, required: rule.credits }
+      const notes =
+        status === 'done' ? [] : [...minimums.filter((m) => !meets(m, true)).map((m) => m.label), ...capped]
+      return {
+        rule,
+        status,
+        used,
+        earned,
+        inProgress,
+        required: rule.credits,
+        note: notes.length ? notes.join(' ') : undefined,
+      }
     }
 
     case 'allOf': {

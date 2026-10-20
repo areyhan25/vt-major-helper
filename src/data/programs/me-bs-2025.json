@@ -6,8 +6,8 @@
   "totalCredits": 128,
   "source": "https://catalog.vt.edu/archive/2025-2026/undergraduate/college-engineering/mechanical-engineering/mechanical-engineering-bs/",
   "notes": [
-    "Technical electives follow Path 1. The 3-credit cap on List #2 courses (including all 4974 and 4994 courses) and the 6-credit Pass/Fail cap aren't checked yet.",
-    "Path 2 (a Biomedical Engineering, Computer Science, Green Engineering, or Physics minor) and advisor-approved courses not on the lists aren't checked.",
+    "Technical electives are checked against Path 1. Path 2 drops the 9-credit ME, ESM, or NSEG minimum if you complete a Biomedical Engineering, Computer Science, Green Engineering, or Physics minor, but minors aren't checked, so that path isn't either.",
+    "Advisor-approved technical electives not on the lists aren't checked.",
     "Pathways Concept 7 is suspended effective Fall 2025, so it isn't listed.",
     "The in-major GPA and the foreign language requirement aren't checked yet."
   ],
@@ -132,13 +132,43 @@
       "title": "Technical Electives",
       "bucket": "major",
       "priority": 1,
-      "note": "15 credits, with at least 9 from 3000-level or higher ME, ESM, or NSEG courses and at most 3 from List #2.",
+      "note": "Path 1: 15 credits, with at least 9 from 3000-level or higher ME, ESM, or NSEG courses, at most 3 from List #2 (including every 4974 and 4994), and at most 6 taken pass/fail.",
       "rule": {
-        "type": "allOf",
-        "rules": [
+        "type": "credits",
+        "label": "Technical Electives",
+        "credits": 15,
+        "from": [
+          "ESM 3054", "ESM 3064", "ESM 3124", "ESM 3154", "ESM 4024", "ESM 5144", "ESM 4044", "ESM 4084",
+          "ESM 4105", "ESM 4106", "ESM 4114", "ESM 4194", "ESM 4204", "ESM 4224", "ESM 4234", "ESM 4245",
+          "ESM 4304", "ESM 5305", "ESM 4444", "ESM 4614", "ESM 4734", "ME 3194", "ME 3604", "ME 3704",
+          "ME 4034", "ME 5034", "ME 4124", "ME 4134", "ME 5134", "ME 4164", "ME 4174", "ME 4184", "ME 4194",
+          "ME 4204", "ME 4224", "ME 4234", "ME 4324", "ME 4344", "ME 4464", "ME 4524", "ME 5704", "ME 4534",
+          "ME 4544", "ME 4554", "ME 4564", "ME 4584", "ME 4614", "ME 4624", "ME 4634", "ME 4644", "ME 5644",
+          "ME 4654", "ME 5794", "ME 4664", "ME 5664", "ME 4674", "ME 4724", "ME 4744", "ME 5735G", "ME 4754",
+          "ME 4764", "ME 4824", "ME 5824", "ME 4854", "ME 5854G", "ME 4864", "ME 5864G", "NSEG 3145",
+          "NSEG 5114", "NSEG 3146", "NSEG 3604", "NSEG 5604", "NSEG 4204", "NSEG 5204", "NSEG 4214",
+          "NSEG 5214", "NSEG 4424", "NSEG 5424", "AOE 3114", "AOE 3124", "AOE 3134", "AOE 3154", "AOE 3164",
+          "AOE 3354", "AOE 4064", "AOE 4264", "AOE 4434", "AOE 4604", "BSE 3324", "BSE 4394", "BMES 3124",
+          "BMES 3134", "BMES 3144", "BMES 3154", "BMES 3164", "BMES 3844", "BMES 4064", "BMES 4214",
+          "BMES 4224", "CHEM 3615", "CHEM 3616", "CHEM 3625", "CHEM 3626", "CHEM 4074", "CHEM 4114",
+          "CHEM 4124", "CHEM 4404", "CHEM 4424", "CHEM 4524", "CHEM 4534", "CHEM 4554", "CHEM 4615",
+          "CHEM 4616", "CHEM 4634", "CHEM 4734", "CEE 3014", "CEE 3104", "CEE 3404", "CEE 3604", "CS 3114",
+          "CS 3214", "CS 3304", "CS 3414", "CS 3704", "CS 3714", "CS 3724", "CS 3744", "CS 3754", "CS 3824",
+          "CS 4104", "CS 4114", "CS 4204", "CS 4214", "CS 4234", "CS 4244", "CS 4254", "CS 4304", "CS 4414",
+          "CS 4504", "CS 4570", "CS 4604", "CS 4704", "CS 4804", "CS 4824", "ENGR 3124", "ENGR 4134",
+          "GEOS 3104", "GEOS 4164", "ISE 3004", "ISE 3204", "ISE 3614", "ISE 4004", "ISE 4264", "ISE 4304",
+          "ISE 4654", "MSE 4044", "MSE 4304", "MSE 4306", "MSE 4314", "MSE 4384", "MSE 4574", "MSE 4604",
+          "MATH 3034", "MATH 3214", "MATH 3224", "MATH 4124", "MATH 4175", "MATH 4225", "MATH 4226",
+          "MATH 4234", "MATH 4245", "MATH 4425", "MATH 4426", "MATH 4445", "MATH 4446", "MATH 4564",
+          "MATH 4574", "PHYS 3355", "PHYS 3356", "PHYS 3405", "PHYS 3406", "PHYS 3655", "PHYS 3656",
+          "PHYS 3704", "PHYS 4315", "PHYS 4316", "PHYS 4455", "PHYS 4456", "PHYS 4504", "PHYS 4554",
+          "PHYS 4574", "PHYS 4614", "PHYS 4624", "PHYS 4674", "PHYS 4714", "UAP 4374", "UAP 4394",
+          "ALCE 2484", "BMES 2104", "CHEM 2514", "CS 2114", "CS 2505", "ENGL 4804", "EDCI 4454", "ECE 2164",
+          "ENGE 4094", "ESM 4974", "ESM 4974H", "ESM 4994", "ESM 4994H", "IDS 2044", "IDS 3124", "ME 4454",
+          "ME 4974", "ME 4974H", "ME 4994", "ME 4994H", "NSEG 4974", "NSEG 4994", "NSEG 4994H", "RED 4604"
+        ],
+        "minimums": [
           {
-            "type": "credits",
-            "label": "ME, ESM, or NSEG Technical Electives",
             "credits": 9,
             "from": [
               "ESM 3054", "ESM 3064", "ESM 3124", "ESM 3154", "ESM 4024", "ESM 5144", "ESM 4044", "ESM 4084",
@@ -150,46 +180,25 @@
               "ME 4634", "ME 4644", "ME 5644", "ME 4654", "ME 5794", "ME 4664", "ME 5664", "ME 4674",
               "ME 4724", "ME 4744", "ME 5735G", "ME 4754", "ME 4764", "ME 4824", "ME 5824", "ME 4854",
               "ME 5854G", "ME 4864", "ME 5864G", "NSEG 3145", "NSEG 5114", "NSEG 3146", "NSEG 3604",
-              "NSEG 5604", "NSEG 4204", "NSEG 5204", "NSEG 4214", "NSEG 5214", "NSEG 4424", "NSEG 5424"
-            ]
-          },
-          {
-            "type": "credits",
-            "label": "Other Technical Electives",
-            "credits": 6,
-            "from": [
-              "ESM 3054", "ESM 3064", "ESM 3124", "ESM 3154", "ESM 4024", "ESM 5144", "ESM 4044", "ESM 4084",
-              "ESM 4105", "ESM 4106", "ESM 4114", "ESM 4194", "ESM 4204", "ESM 4224", "ESM 4234", "ESM 4245",
-              "ESM 4304", "ESM 5305", "ESM 4444", "ESM 4614", "ESM 4734", "ME 3194", "ME 3604", "ME 3704",
-              "ME 4034", "ME 5034", "ME 4124", "ME 4134", "ME 5134", "ME 4164", "ME 4174", "ME 4184",
-              "ME 4194", "ME 4204", "ME 4224", "ME 4234", "ME 4324", "ME 4344", "ME 4464", "ME 4524",
-              "ME 5704", "ME 4534", "ME 4544", "ME 4554", "ME 4564", "ME 4584", "ME 4614", "ME 4624",
-              "ME 4634", "ME 4644", "ME 5644", "ME 4654", "ME 5794", "ME 4664", "ME 5664", "ME 4674",
-              "ME 4724", "ME 4744", "ME 5735G", "ME 4754", "ME 4764", "ME 4824", "ME 5824", "ME 4854",
-              "ME 5854G", "ME 4864", "ME 5864G", "NSEG 3145", "NSEG 5114", "NSEG 3146", "NSEG 3604",
               "NSEG 5604", "NSEG 4204", "NSEG 5204", "NSEG 4214", "NSEG 5214", "NSEG 4424", "NSEG 5424",
-              "AOE 3114", "AOE 3124", "AOE 3134", "AOE 3154", "AOE 3164", "AOE 3354", "AOE 4064", "AOE 4264",
-              "AOE 4434", "AOE 4604", "BSE 3324", "BSE 4394", "BMES 3124", "BMES 3134", "BMES 3144",
-              "BMES 3154", "BMES 3164", "BMES 3844", "BMES 4064", "BMES 4214", "BMES 4224", "CHEM 3615",
-              "CHEM 3616", "CHEM 3625", "CHEM 3626", "CHEM 4074", "CHEM 4114", "CHEM 4124", "CHEM 4404",
-              "CHEM 4424", "CHEM 4524", "CHEM 4534", "CHEM 4554", "CHEM 4615", "CHEM 4616", "CHEM 4634",
-              "CHEM 4734", "CEE 3014", "CEE 3104", "CEE 3404", "CEE 3604", "CS 3114", "CS 3214", "CS 3304",
-              "CS 3414", "CS 3704", "CS 3714", "CS 3724", "CS 3744", "CS 3754", "CS 3824", "CS 4104",
-              "CS 4114", "CS 4204", "CS 4214", "CS 4234", "CS 4244", "CS 4254", "CS 4304", "CS 4414",
-              "CS 4504", "CS 4570", "CS 4604", "CS 4704", "CS 4804", "CS 4824", "ENGR 3124", "ENGR 4134",
-              "GEOS 3104", "GEOS 4164", "ISE 3004", "ISE 3204", "ISE 3614", "ISE 4004", "ISE 4264",
-              "ISE 4304", "ISE 4654", "MSE 4044", "MSE 4304", "MSE 4306", "MSE 4314", "MSE 4384", "MSE 4574",
-              "MSE 4604", "MATH 3034", "MATH 3214", "MATH 3224", "MATH 4124", "MATH 4175", "MATH 4225",
-              "MATH 4226", "MATH 4234", "MATH 4245", "MATH 4425", "MATH 4426", "MATH 4445", "MATH 4446",
-              "MATH 4564", "MATH 4574", "PHYS 3355", "PHYS 3356", "PHYS 3405", "PHYS 3406", "PHYS 3655",
-              "PHYS 3656", "PHYS 3704", "PHYS 4315", "PHYS 4316", "PHYS 4455", "PHYS 4456", "PHYS 4504",
-              "PHYS 4554", "PHYS 4574", "PHYS 4614", "PHYS 4624", "PHYS 4674", "PHYS 4714", "UAP 4374",
-              "UAP 4394", "ALCE 2484", "BMES 2104", "CHEM 2514", "CS 2114", "CS 2505", "ENGL 4804",
-              "EDCI 4454", "ECE 2164", "ENGE 4094", "ESM 4974", "ESM 4974H", "ESM 4994", "ESM 4994H",
-              "IDS 2044", "IDS 3124", "ME 4454", "ME 4974", "ME 4974H", "ME 4994", "ME 4994H", "NSEG 4974",
-              "NSEG 4994", "NSEG 4994H", "RED 4604"
-            ]
+              "ESM 4974", "ESM 4974H", "ESM 4994", "ESM 4994H", "ME 4454", "ME 4974", "ME 4974H", "ME 4994",
+              "ME 4994H", "NSEG 4974", "NSEG 4994", "NSEG 4994H"
+            ],
+            "label": "At least 9 credits must be 3000-level or higher ME, ESM, or NSEG courses (waived on Path 2, which needs a Biomedical Engineering, Computer Science, Green Engineering, or Physics minor)."
           }
+        ],
+        "limits": [
+          {
+            "credits": 3,
+            "from": [
+              "ALCE 2484", "BMES 2104", "CHEM 2514", "CS 2114", "CS 2505", "ENGL 4804", "EDCI 4454",
+              "ECE 2164", "ENGE 4094", "ESM 4974", "ESM 4974H", "ESM 4994", "ESM 4994H", "IDS 2044",
+              "IDS 3124", "ME 4454", "ME 4974", "ME 4974H", "ME 4994", "ME 4994H", "NSEG 4974", "NSEG 4994",
+              "NSEG 4994H", "RED 4604"
+            ],
+            "label": "At most 3 credits from List #2 (including every 4974 and 4994) count."
+          },
+          {"credits": 6, "grades": ["P"], "label": "At most 6 pass/fail credits count."}
         ]
       }
     },

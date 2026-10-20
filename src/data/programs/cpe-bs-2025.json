@@ -6,8 +6,7 @@
   "totalCredits": 120,
   "source": "https://catalog.vt.edu/archive/2025-2026/undergraduate/college-engineering/electrical-computer-engineering/computer-engineering-bs/",
   "notes": [
-    "Secondary focus is checked as 9 credits of 3000-level and up ECE (plus the listed AOE and CS courses). The single-focus-area rule, the one-4000-level-course rule, and individualized focus plans aren't checked yet.",
-    "Technical electives must be 3 courses from the approved CPE list. The 3-credit cap on ECE 4974 and ECE 4994 isn't checked yet.",
+    "The catalog says CPE secondary focus courses must all come from one ECE focus area, but it doesn't publish the list of areas, so that rule and individualized focus plans aren't checked. Confirm your focus area with your advisor.",
     "Pathways Concept 7 is suspended effective Fall 2025, so it isn't listed.",
     "Free electives, the in-major GPA, and the foreign language requirement aren't checked yet."
   ],
@@ -143,6 +142,13 @@
           "ECE 3564", "ECE 4414", "CS 4224", "ECE 4424", "CS 4824", "ECE 5424", "ECE 4504", "CS 4504",
           "ECE 4514", "ECE 4524", "ECE 4525", "ECE 4540", "ECE 4550", "ECE 4554", "ECE 5554", "ECE 4560",
           "ECE 4564", "ECE 4574", "ECE 4580", "ECE 4704", "ECE 4974", "ECE 4994"
+        ],
+        "limits": [
+          {
+            "credits": 3,
+            "from": ["ECE 4974", "ECE 4994"],
+            "label": "At most 3 credits of ECE 4974 and ECE 4994 count as technical electives."
+          }
         ]
       }
     },
@@ -151,7 +157,7 @@
       "title": "Secondary Focus",
       "bucket": "major",
       "priority": 2,
-      "note": "All 9 credits come from one ECE focus area, with at least one course at the 4000 level or higher.",
+      "note": "3 ECE courses at the 3000 level or higher (plus the listed AOE and CS courses) that aren't major courses, with at least one at the 4000 level or higher, all taken A-F. The catalog also says they must come from one ECE focus area, which isn't checked.",
       "rule": {
         "type": "credits",
         "label": "Secondary Focus Electives (3 courses)",
@@ -161,7 +167,26 @@
           "ECE 3***", "ECE 4***", "ECE 5***", "AOE 4654", "AOE 4674", "CS 3214", "CS 4224", "CS 4264",
           "CS 4504", "CS 4824"
         ],
-        "exclude": ["ECE 3054", "ECE 3074", "ECE 3254", "ECE 3274", "ECE 3354", "ECE 3524", "ECE 4944"]
+        "exclude": ["ECE 3054", "ECE 3074", "ECE 3254", "ECE 3274", "ECE 3354", "ECE 3524", "ECE 4944"],
+        "minimums": [
+          {
+            "courses": 1,
+            "from": ["ECE 4***", "ECE 5***", "AOE 4654", "AOE 4674", "CS 4224", "CS 4264", "CS 4504", "CS 4824"],
+            "label": "At least one secondary focus course must be at the 4000 level or higher."
+          }
+        ],
+        "limits": [
+          {
+            "credits": 6,
+            "from": ["ECE 4974", "ECE 4994"],
+            "label": "At most 6 credits of ECE 4974 and ECE 4994 count toward the secondary focus."
+          },
+          {
+            "credits": 0,
+            "grades": ["P", "S"],
+            "label": "Pass/fail courses don't count; secondary focus courses must be taken A-F."
+          }
+        ]
       }
     },
     {

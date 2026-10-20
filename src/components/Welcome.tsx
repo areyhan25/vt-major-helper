@@ -1,5 +1,6 @@
 import { useId, useState } from 'react'
 import type { Program } from '../engine/types'
+import hokieBird from '../assets/hokie-bird.png'
 
 /** Short name a student might type, from the DARS code: "BSCS CS" becomes "CS". */
 function abbreviation(p: Program) {
@@ -116,6 +117,8 @@ export function Welcome({ programs, onPick }: { programs: Program[]; onPick: (id
           </ul>
         )}
       </div>
+
+      <img src={hokieBird} alt="The HokieBird" className="mt-10 h-48 w-auto select-none sm:h-56" draggable={false} />
 
       <p className="mt-auto max-w-md pt-16 text-center text-xs leading-relaxed text-faint">
         Unofficial planning tool. Always check your official DARS and talk with your advisor. Your courses stay in this

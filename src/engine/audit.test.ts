@@ -101,6 +101,41 @@ describe('runAudit', () => {
     expect(runAudit(p, [c('CS 3214'), c('CS 3304')]).sections[0].result.status).toBe('done')
   })
 
+  it('fills credit minimums before general picks', () => {
+    const rule = {
+      type: 'credits' as const,
+      credits: 6,
+      from: ['ECE 3***', 'ECE 4***'],
+      minimums: [{ courses: 1, from: ['ECE 4***'], label: 'Needs a 4000-level course.' }],
+    }
+    const p = program([{ id: 'f', title: 'F', bucket: 'major', rule }])
+    const short = runAudit(p, [c('ECE 3614'), c('ECE 3704')]).sections[0].result
+    expect(short.status).toBe('needed')
+    expect(short.note).toBe('Needs a 4000-level course.')
+    const ok = runAudit(p, [c('ECE 3614'), c('ECE 3704'), c('ECE 4550')]).sections[0].result
+    expect(ok.status).toBe('done')
+    expect(ok.used.map((x) => x.code)).toContain('ECE 4550')
+    expect(runAudit(p, [c('ECE 3614'), c('ECE 4550', 'IP')]).sections[0].result.status).toBe('in-progress')
+  })
+
+  it('caps credits by course list and by grade', () => {
+    const rule = {
+      type: 'credits' as const,
+      credits: 6,
+      from: ['ME 4***'],
+      limits: [
+        { credits: 3, from: ['ME 4994'], label: 'At most 3 credits of ME 4994.' },
+        { credits: 0, grades: ['P'], label: 'No pass/fail.' },
+      ],
+    }
+    const p = program([{ id: 't', title: 'T', bucket: 'major', rule }])
+    const capped = runAudit(p, [c('ME 4994', 'A', 6)]).sections[0].result
+    expect(capped).toMatchObject({ status: 'needed', earned: 3, note: 'At most 3 credits of ME 4994.' })
+    expect(runAudit(p, [c('ME 4994', 'A', 6), c('ME 4524')]).sections[0].result.status).toBe('done')
+    const pf = runAudit(p, [c('ME 4524'), c('ME 4534', 'P')]).sections[0].result
+    expect(pf).toMatchObject({ status: 'needed', earned: 3, note: 'No pass/fail.' })
+  })
+
   it('picks the anyOf option that is furthest along', () => {
     const p = program([
       {
@@ -153,5 +188,61 @@ describe('CS B.S. 2025-26 with the sample DARS', () => {
     expect(status('pathways-major')).toBe('in-progress')
     expect(status('pathways-4')).toBe('done')
     expect(status('pathways-2')).toBe('needed')
+  })
+})
+
+describe('ECE and ME elective rules', () => {
+  const audit = (id: string, courses: TakenCourse[]) => {
+    const r = runAudit(programs.find((p) => p.id === id)!, courses, courseInfo)
+    return (section: string) => r.sections.find((s) => s.section.id === section)!.result
+  }
+
+  it('needs a 4000-level secondary focus course for CPE and EE', () => {
+    for (const id of ['cpe-bs-2025', 'ee-bs-2025']) {
+      expect(audit(id, [c('ECE 3624'), c('ECE 3714'), c('ECE 3644')])('secondary-focus').status).toBe('needed')
+      expect(audit(id, [c('ECE 3624'), c('ECE 3714'), c('ECE 4134')])('secondary-focus').status).toBe('done')
+    }
+  })
+
+  it('caps ECE 4974 and ECE 4994 in CPE technical electives and the secondary focus', () => {
+    const tech = audit('cpe-bs-2025', [c('ECE 4974'), c('ECE 4994'), c('ECE 4550')])('technical')
+    expect(tech.status).toBe('needed')
+    expect(tech.earned).toBe(6)
+    const focus = audit('ee-bs-2025', [c('ECE 4974', 'A', 6), c('ECE 4994', 'A', 3)])('secondary-focus')
+    expect(focus.earned).toBe(6)
+  })
+
+  it('keeps pass/fail courses out of the ECE secondary focus', () => {
+    const focus = audit('ee-bs-2025', [c('ECE 3614'), c('ECE 3704'), c('ECE 4134', 'P')])('secondary-focus')
+    expect(focus.status).toBe('needed')
+  })
+
+  it('checks ME technical elective minimums and caps across all 15 credits', () => {
+    const list2 = [c('ME 4994'), c('CS 2114'), c('ENGL 4804')]
+    const ok = [c('ME 4524'), c('ME 4534'), c('ME 4544'), c('CS 3114'), c('ME 4994')]
+    expect(audit('me-bs-2025', ok)('technical').status).toBe('done')
+    // Only 3 of the 9 List #2 credits count.
+    expect(audit('me-bs-2025', [c('ME 4524'), c('ME 4534'), c('ME 4544'), ...list2])('technical').earned).toBe(12)
+    // 15 credits, but only 6 from ME, ESM, or NSEG.
+    const fewMe = audit('me-bs-2025', [c('ME 4524'), c('ME 4534'), c('CS 3114'), c('CS 3214'), c('CS 3304')])('technical')
+    expect(fewMe.status).toBe('needed')
+    expect(fewMe.note).toMatch(/At least 9 credits/)
+    // At most 6 pass/fail credits.
+    const pf = [c('ME 4524', 'P'), c('ME 4534', 'P'), c('ME 4544', 'P'), c('CS 3114'), c('CS 3214')]
+    expect(audit('me-bs-2025', pf)('technical').earned).toBe(12)
+  })
+
+  it('counts senior design for Pathways 1a and MATH 2214 for 5a', () => {
+    for (const [id, design] of [
+      ['cpe-bs-2025', ['ECE 4805', 'ECE 4806']],
+      ['ee-bs-2025', ['ECE 4805', 'ECE 4806']],
+      ['me-bs-2025', ['ME 4015', 'ME 4016']],
+    ] as const) {
+      const r = audit(id, [...design.map((d) => c(d)), c('MATH 2214')])
+      const pw1 = r('pathways-1').children!.find((x) => x.rule.label?.includes('1a'))!
+      const pw5 = r('pathways-5').children!.find((x) => x.rule.label?.includes('5a'))!
+      expect(pw1.status, id).toBe('done')
+      expect(pw5.status, id).toBe('done')
+    }
   })
 })

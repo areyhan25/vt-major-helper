@@ -20,8 +20,44 @@ export type Rule =
       /** Pathways concept tags, e.g. ["5f", "5a"]. A course needs one of them. */
       pathways?: string[]
       minGrade?: string
+      /** Parts of the total that must come from certain courses, e.g. "at least one 4000-level course". */
+      minimums?: CreditMinimum[]
+      /** Caps on what can count, e.g. "at most 3 credits from List #2". A 0-credit cap excludes. */
+      limits?: CreditLimit[]
       label?: string
     }
+
+export interface CreditMinimum {
+  from: string[]
+  credits?: number
+  courses?: number
+  /** Shown when the minimum isn't met. */
+  label: string
+}
+
+export interface CreditLimit {
+  credits: number
+  /** Courses the cap covers. Without it, every course does (when grades match). */
+  from?: string[]
+  /** Grades the cap covers, e.g. ["P"] for pass/fail. Without it, every grade does. */
+  grades?: string[]
+  /** Shown when the cap keeps a course from counting fully. */
+  label: string
+}
+
+const CreditMinimumSchema = z.object({
+  from: z.array(CoursePattern),
+  credits: z.number().nonnegative().optional(),
+  courses: z.number().int().positive().optional(),
+  label: z.string(),
+})
+
+const CreditLimitSchema = z.object({
+  credits: z.number().nonnegative(),
+  from: z.array(CoursePattern).optional(),
+  grades: z.array(z.string()).optional(),
+  label: z.string(),
+})
 
 export const RuleSchema: z.ZodType<Rule> = z.lazy(() =>
   z.discriminatedUnion('type', [
@@ -41,6 +77,8 @@ export const RuleSchema: z.ZodType<Rule> = z.lazy(() =>
       exclude: z.array(CoursePattern).optional(),
       pathways: z.array(z.string()).optional(),
       minGrade: z.string().optional(),
+      minimums: z.array(CreditMinimumSchema).optional(),
+      limits: z.array(CreditLimitSchema).optional(),
       label: z.string().optional(),
     }),
   ]),

@@ -7,6 +7,8 @@ Pick your major, import your DARS report (or add courses by hand), and see which
 
 Turn on **What-if mode** to plan ahead: drag courses between semesters, change grades, add future semesters, and plan courses straight from a requirement's options. The plan is kept separately, so your real record doesn't change.
 
+The **GPA calculator** tab works out your cumulative and per-semester GPA from the same courses, lets you pick expected grades for in-progress and planned courses, and tells you what you'd need to average to reach a target GPA.
+
 Everything runs in your browser. Your DARS PDF is read locally with pdf.js and never uploaded, and your course list is saved only in this browser.
 
 Supported so far: **Computer Science, B.S. (2025-26 catalog)**. Computer Engineering, Electrical Engineering, and Mechanical Engineering are next.

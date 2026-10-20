@@ -1,0 +1,12 @@
+{
+ "subject": "University Registrar (REG)",
+ "source": "https://catalog.vt.edu/course-descriptions/reg/",
+ "scrapedAt": "2026-10-20",
+ "courses": {
+  "REG 1004": {"title":"Registrar Placeholder Course","credits":"3-7 credits"},
+  "REG 1234": {"title":"Testing Crosslisting Capabilities in Courseleaf CIM","credits":"2 credits","crossListed":"CL 1234"},
+  "REG 9000": {"title":"VTCSOM Placeholder","credits":"5 credits"},
+  "REG 9984": {"title":"Free Time","credits":"0 credits"},
+  "REG 9994": {"title":"Lunch","credits":"0 credits"}
+ }
+}

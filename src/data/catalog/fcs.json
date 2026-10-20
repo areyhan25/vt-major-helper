@@ -1,0 +1,20 @@
+{
+ "subject": "Family and Consumer Science (FCS)",
+ "source": "https://catalog.vt.edu/course-descriptions/fcs/",
+ "scrapedAt": "2026-10-20",
+ "courses": {
+  "FCS 2964": {"title":"Field Work/Practicum","credits":"1-19 credits"},
+  "FCS 2974": {"title":"Independent Study","credits":"1-19 credits"},
+  "FCS 2974H": {"title":"Independent Study","credits":"1-19 credits"},
+  "FCS 2984": {"title":"Special Study","credits":"1-19 credits"},
+  "FCS 3954": {"title":"Study Abroad","credits":"1-19 credits"},
+  "FCS 4964": {"title":"Field Work/Practicum","credits":"1-19 credits"},
+  "FCS 4964H": {"title":"Field Work/Practicum","credits":"1-19 credits"},
+  "FCS 4974": {"title":"Independent Study","credits":"1-19 credits"},
+  "FCS 4974H": {"title":"Independent Study","credits":"1-19 credits"},
+  "FCS 4984": {"title":"Special Study","credits":"1-19 credits"},
+  "FCS 4984H": {"title":"Special Study","credits":"1-19 credits"},
+  "FCS 4994": {"title":"Undergraduate Research","credits":"1-19 credits"},
+  "FCS 4994H": {"title":"Undergraduate Research","credits":"1-19 credits"}
+ }
+}

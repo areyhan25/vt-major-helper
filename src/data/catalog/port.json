@@ -1,0 +1,14 @@
+{
+ "subject": "Portuguese (PORT)",
+ "source": "https://catalog.vt.edu/course-descriptions/port/",
+ "scrapedAt": "2026-10-20",
+ "courses": {
+  "PORT 2964": {"title":"Field Study","credits":"1-19 credits"},
+  "PORT 2974": {"title":"Independent Study","credits":"1-19 credits"},
+  "PORT 2984": {"title":"Special Study","credits":"1-19 credits"},
+  "PORT 4964": {"title":"Field Study","credits":"1-19 credits"},
+  "PORT 4974": {"title":"Independent Study","credits":"1-19 credits"},
+  "PORT 4984": {"title":"Special Study","credits":"1-19 credits"},
+  "PORT 4994": {"title":"Undergraduate Research","credits":"1-19 credits"}
+ }
+}

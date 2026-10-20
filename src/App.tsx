@@ -19,6 +19,7 @@ export default function App() {
   // null until What-if mode is first opened, then a separate copy of the courses.
   const [plan, setPlan] = useState<TakenCourse[] | null>(saved.plan ?? null)
   const [planTerms, setPlanTerms] = useState<string[]>(saved.planTerms ?? [])
+  const [confirmingReset, setConfirmingReset] = useState(false)
 
   useEffect(
     () => save({ programId, courses, plan: plan ?? undefined, planTerms, whatIf }),
@@ -48,6 +49,16 @@ export default function App() {
   function resetPlan() {
     setPlan(courses)
     setPlanTerms([])
+  }
+
+  /** Clears the courses, the What-if plan, and the chosen major. */
+  function startOver() {
+    setCourses([])
+    setPlan(null)
+    setPlanTerms([])
+    setWhatIf(false)
+    setProgramId(programs[0].id)
+    setConfirmingReset(false)
   }
 
   const majorSelect = (
@@ -123,8 +134,29 @@ export default function App() {
         </header>
 
         <main className="mx-auto max-w-7xl space-y-6 p-4 lg:p-8">
-          <div id="overview" className="scroll-mt-6">
-            <h1 className="hidden text-2xl font-semibold tracking-tight lg:block">Overview</h1>
+          <div id="overview" className="flex scroll-mt-6 items-center justify-between gap-3">
+            <h1 className="text-2xl font-semibold tracking-tight">Overview</h1>
+            {confirmingReset ? (
+              <span className="flex items-center gap-2 text-sm">
+                <span className="text-muted">Clear all courses and your major?</span>
+                <button className="rounded-lg bg-needed px-3 py-1.5 font-medium text-white" onClick={startOver}>
+                  Clear
+                </button>
+                <button
+                  className="rounded-lg border border-line px-3 py-1.5 text-muted hover:text-ink"
+                  onClick={() => setConfirmingReset(false)}
+                >
+                  Cancel
+                </button>
+              </span>
+            ) : (
+              <button
+                className="rounded-lg border border-line px-3 py-1.5 text-sm text-muted hover:border-needed hover:text-needed"
+                onClick={() => setConfirmingReset(true)}
+              >
+                Start over
+              </button>
+            )}
           </div>
 
           {whatIf && (

@@ -81,7 +81,12 @@ export function Popover({
   }, [])
 
   useLayoutEffect(() => {
-    if (open) place()
+    if (!open || !panel.current) return
+    place()
+    // Re-place when the content grows, e.g. a course description finishes loading.
+    const observer = new ResizeObserver(place)
+    observer.observe(panel.current)
+    return () => observer.disconnect()
   }, [open, place])
 
   useEffect(() => {
@@ -120,7 +125,7 @@ export function Popover({
           role="dialog"
           aria-label={label}
           style={{ top: pos.top, left: pos.left }}
-          className="fixed z-50 w-72 max-w-[calc(100vw-16px)] rounded-xl border border-line bg-raised p-4 text-sm shadow-2xl shadow-black/60"
+          className="fixed z-50 w-80 max-w-[calc(100vw-16px)] rounded-xl border border-line bg-raised p-4 text-sm shadow-2xl shadow-black/60"
         >
           {children(() => setOpen(false))}
         </div>

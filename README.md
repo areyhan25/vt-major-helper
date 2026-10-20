@@ -7,6 +7,8 @@ Pick your major, import your DARS report (or add courses by hand), and see which
 
 Turn on **What-if mode** to plan ahead: drag courses between semesters, change grades, add future semesters, and plan courses straight from a requirement's options. The plan is kept separately, so your real record doesn't change.
 
+The **GPA calculator** tab works out your cumulative and per-semester GPA from the same courses, lets you pick expected grades for in-progress and planned courses, and tells you what you'd need to average to reach a target GPA.
+
 Everything runs in your browser. Your DARS PDF is read locally with pdf.js and never uploaded, and your course list is saved only in this browser.
 
 Supported so far: **Computer Science, B.S. (2025-26 catalog)**. Computer Engineering, Electrical Engineering, and Mechanical Engineering are next.
@@ -26,7 +28,8 @@ npm run build    # static site in dist/
 |---|---|
 | `src/engine/` | The audit engine: requirement schema (`types.ts`), grade rules, course pattern matching, and `runAudit` |
 | `src/data/programs/` | One JSON file per major and catalog year, written from [catalog.vt.edu](https://catalog.vt.edu/undergraduate/) |
-| `src/data/courses.json` | Pathways tags per course (a seed list for now) |
+| `src/data/courses.json` | Pathways tags per course, from the catalog |
+| `src/data/catalog/` | Every course's title, credits, description, and prerequisites, one file per subject, scraped from [catalog.vt.edu](https://catalog.vt.edu/course-descriptions/) |
 | `src/import/` | DARS importer: PDF to text (`pdf.ts`), then text to courses (`dars.ts`) |
 | `src/components/` | The UI |
 
@@ -39,6 +42,15 @@ Each major is a list of sections. A section has a `rule`, which is one of:
 - `credits`: N credits from courses matching `from` patterns (`CS 4***` matches any 4000-level CS course), minus `exclude`, or with given `pathways` tags
 
 A course can be used once per `bucket` (`major` or `pathways`), which is how Pathways courses double count. An `exclusive` section (Degree Core) takes its courses out of every bucket. Sections with a lower `priority` claim courses first, so put broad electives last.
+
+### Refreshing course descriptions
+
+catalog.vt.edu has a bot check that needs a real browser, so the scraper drives your installed Chrome or Edge (or the browser at `CHROME_PATH`):
+
+```sh
+npm run catalog:scrape            # every subject, takes about 15 minutes
+npm run catalog:scrape -- cs math # just these subjects
+```
 
 ### Testing against your own DARS
 

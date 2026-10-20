@@ -10,7 +10,13 @@ export interface Saved {
   /** Empty future semesters added in What-if mode. */
   planTerms?: string[]
   whatIf?: boolean
+  /** Which tab is open. */
+  tab?: Tab
+  /** Expected grades for in-progress and planned courses, used by the GPA calculator. */
+  expected?: Record<string, string>
 }
+
+export type Tab = 'audit' | 'gpa'
 
 /** Everything stays in this browser. Storage can be unavailable (private windows), so failures are ignored. */
 export function load(): Saved {

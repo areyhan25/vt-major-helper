@@ -1,0 +1,9 @@
+{
+ "subject": "Cooperative Education Program (CEP)",
+ "source": "https://catalog.vt.edu/course-descriptions/cep/",
+ "scrapedAt": "2026-10-20",
+ "courses": {
+  "CEP 3084": {"title":"University Internship","credits":"0 credits","description":"To be used of Cooperative Education Program - University Internships. No Credit."},
+  "CEP 4084": {"title":"Cooperative Education Program","credits":"0 credits","description":"To be used for co-ops in industry. No credit."}
+ }
+}

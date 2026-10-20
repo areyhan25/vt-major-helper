@@ -1,0 +1,13 @@
+{
+ "subject": "Hebrew (HEB)",
+ "source": "https://catalog.vt.edu/course-descriptions/heb/",
+ "scrapedAt": "2026-10-20",
+ "courses": {
+  "HEB 1105": {"title":"Elementary Modern Hebrew","credits":"3 credits","description":"Introduction to speaking, listening, reading, and writing the modern Hebrew language. Emphasis on developing proficiency in practical language use, comprehension and cultural competency. 1105: Basic tasks such as greetings, counting, and simple requests; for students with no prior knowledge of the language. 1106: More advanced tasks like asking directions, expressing personal preferences, or making purchases.","crossListed":"JUD 1105"},
+  "HEB 1106": {"title":"Elementary Modern Hebrew","credits":"3 credits","description":"Introduction to speaking, listening, reading, and writing the modern Hebrew language. Emphasis on developing proficiency in practical language use, comprehension and cultural competency. 1105: Basic tasks such as greetings, counting, and simple requests; for students with no prior knowledge of the language. 1106: More advanced tasks like asking directions, expressing personal preferences, or making purchases.","prereq":"HEB 1105","crossListed":"JUD 1106"},
+  "HEB 2974H": {"title":"Independent Study","credits":"1-19 credits","description":"Honors section."},
+  "HEB 2984": {"title":"Special Study","credits":"1-19 credits"},
+  "HEB 4974H": {"title":"Independent Study","credits":"1-19 credits","description":"Honors section."},
+  "HEB 4994H": {"title":"Undergraduate Research","credits":"1-19 credits","description":"Honors section."}
+ }
+}

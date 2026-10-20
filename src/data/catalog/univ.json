@@ -1,0 +1,20 @@
+{
+ "subject": "University Course Series (UNIV)",
+ "source": "https://catalog.vt.edu/course-descriptions/univ/",
+ "scrapedAt": "2026-10-20",
+ "courses": {
+  "UNIV 1004": {"title":"College Success Strategies","credits":"3 credits","description":"Study and application of strategies, skills, attitudes and behaviors leading to effective academic learning in a college setting. Credit not applicable to meeting degree requirements; may not be repeated."},
+  "UNIV 1824": {"title":"Pathways to Success: Exploring Your Future","credits":"3 credits","description":"Introductory experience course for University Studies and Explore Technology majors. Create fundamental knowledge and develop skills that facilitate successful transition to the university and develop decision-making skills, problem solving, inquiry, research majors and careers, critical thinking and integration of knowledge. Examine their personal decision towards their major utilizing psychosocial and identity in support of a successful transition. Evaluate sources of information to make an argument."},
+  "UNIV 1984": {"title":"Special Study","credits":"1-19 credits","description":"May not count towards degree requirements; consult advisor."},
+  "UNIV 2114": {"title":"Unleash Your HokiePotential","credits":"1 credit","description":"First-Year Experience course for transfer students. Establish fundamental knowledge and develop skills that facilitate a successful transition into Virginia Tech. Develop/refine decision-making skills, problem-solving skills, critical thinking, and inquiry. Examine personal strengths, values, goals, and integration of knowledge; establish academic, personal, and career goals in support of a successful transition to Virginia Tech. Topics covered will include: principles of community, academic integrity, campus resources, digital and informational literacy, career planning, academic planning, and goal setting."},
+  "UNIV 2984": {"title":"Special Study","credits":"1-19 credits"},
+  "UNIV 3944": {"title":"VT Study Abroad Enrollment","credits":"0 credits","description":"Participation in an approved study abroad program without direct supervision of the VA Tech faculty but with required enrollment in an approved program of study in an international university. Course represents 12 billable hours and no academic credit."},
+  "UNIV 3944S": {"title":"VT Study Abroad Enrollment 3","credits":"0 credits","description":"Participation in an approved study abroad program without direct supervision of the VA Tech faculty but with required enrollment in an approved program of study in an international university. Course represents three billable hours and no academic credit."},
+  "UNIV 3944T": {"title":"VT Study Abroad Enrollment 4","credits":"0 credits","description":"Participation in an approved study abroad program without direct supervision of the VA Tech faculty but with required enrollment in an approved program of study in an international university. Course represents four billable hours and no academic credit."},
+  "UNIV 3944U": {"title":"VT Study Abroad Enrollment 6","credits":"0 credits","description":"Participation in an approved study abroad program without direct supervision of the VA Tech faculty but with required enrollment in an approved program of study in an international university. Course represents six billable hours and no academic credit."},
+  "UNIV 3944V": {"title":"VT Study Abroad Enrollment 7","credits":"0 credits","description":"Participation in an approved study abroad program without direct supervision of the VA Tech faculty but with required enrollment in an approved program of study in an international university. Course represents four billable hours and no academic credit."},
+  "UNIV 3954": {"title":"Study Abroad","credits":"1-19 credits"},
+  "UNIV 4984": {"title":"Special Study","credits":"1-19 credits"},
+  "UNIV 5974": {"title":"Independent Study","credits":"1-19 credits"}
+ }
+}

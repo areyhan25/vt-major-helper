@@ -7,7 +7,8 @@ import { Chevron, Chip, Dot, Panel, StatusKey } from './ui'
 interface Props {
   audit: AuditResult
   titles: Record<string, string>
-  whatIf: boolean
+  /** Planner mode, where needed courses can be planned into a future semester. */
+  planning: boolean
   onPlan?: (code: string, term: string) => void
   planTerms: string[]
 }
@@ -37,7 +38,7 @@ export function AuditView({ audit, ...shared }: Props) {
         </button>
       </div>
       <div className="mt-3 rounded-lg bg-page/60 px-3 py-2">
-        <StatusKey whatIf={shared.whatIf} />
+        <StatusKey planning={shared.planning} />
       </div>
 
       <div className="mt-4 divide-y divide-line">
@@ -108,7 +109,7 @@ function RuleView({ result, top = false, ...shared }: { result: RuleResult; top?
                 code={rule.course}
                 variant="heading"
                 {...shared}
-                onPlan={shared.whatIf && result.status === 'needed' ? shared.onPlan : undefined}
+                onPlan={result.status === 'needed' ? shared.onPlan : undefined}
               />
               {rule.minGrade && <span className="ml-1.5 text-xs text-muted">{rule.minGrade} or better</span>}
               {result.used[0] && (
@@ -137,7 +138,7 @@ function RuleView({ result, top = false, ...shared }: { result: RuleResult; top?
         {opts.length > 0 && (
           <ChipRow label="Options">
             {opts.map((code) => (
-              <CourseChip key={code} code={code} {...shared} onPlan={shared.whatIf ? shared.onPlan : undefined} />
+              <CourseChip key={code} code={code} {...shared} />
             ))}
           </ChipRow>
         )}

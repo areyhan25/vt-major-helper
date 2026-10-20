@@ -1,9 +1,12 @@
 import { useState, type FormEvent, type ReactNode } from 'react'
-import { isInProgress } from '../engine/grades'
+import { useCatalogCourses } from '../data/catalog'
+import { isInProgress, PLANNED } from '../engine/grades'
 import { normalizeCode } from '../engine/match'
+import { checkPlanned } from '../engine/prereqs'
 import { PRIOR, semesterKeyFor } from '../engine/semesters'
 import { termLabel, termOrder, termsAfter } from '../engine/terms'
 import type { TakenCourse } from '../engine/types'
+import type { Mode } from '../storage'
 import { inputClass } from './styles'
 import { Chevron, Panel, Popover } from './ui'
 
@@ -12,21 +15,35 @@ const GRADES = ['A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'C-', 'D+', 'D', 'D-', 'F
 interface Props {
   courses: TakenCourse[]
   onChange: (courses: TakenCourse[]) => void
-  whatIf: boolean
-  /** Empty semesters added in What-if mode. */
+  /**
+   * Current edits the real record. What-if edits a scratch copy of it, with nothing in the future.
+   * Planner shows the real record read-only and lets you plan courses into future semesters.
+   */
+  mode: Mode
+  /** Empty semesters added in Planner mode. */
   extraTerms: string[]
   onExtraTerms: (terms: string[]) => void
 }
 
-export function SemesterBoard({ courses, onChange, whatIf, extraTerms, onExtraTerms }: Props) {
+export function SemesterBoard({ courses, onChange, mode, extraTerms, onExtraTerms }: Props) {
+  const planner = mode === 'planner'
   const keyOf = semesterKeyFor(courses)
   // Block keys: real terms in calendar order, with prior AP/transfer credit first.
-  const blocks = [...new Set([...courses.map(keyOf), ...(whatIf ? extraTerms : [])])].sort(
+  const blocks = [...new Set([...courses.map(keyOf), ...(planner ? extraTerms : [])])].sort(
     (a, b) => (a === PRIOR ? -1 : b === PRIOR ? 1 : termOrder(a) - termOrder(b)),
   )
   const terms = blocks.filter((b) => b !== PRIOR)
   const last = [...courses.map((c) => c.term), ...terms].sort((a, b) => termOrder(a) - termOrder(b)).at(-1) ?? ''
   const upcoming = termsAfter(last, 6)
+  // Planned courses only go in semesters after the last one with real courses.
+  const lastReal = Math.max(-1, ...courses.filter((c) => c.grade !== PLANNED).map((c) => termOrder(c.term)))
+  const future = [...terms, ...upcoming].filter((t) => termOrder(t) > lastReal)
+  const canDrop = (term: string) => (planner ? termOrder(term) > lastReal : mode === 'whatif' && term !== PRIOR)
+  const canEdit = (c: TakenCourse) => mode === 'whatif' || (planner && c.grade === PLANNED)
+  const moveTerms = planner ? future : terms
+
+  const catalog = useCatalogCourses(planner ? courses.filter((c) => c.grade === PLANNED).map((c) => c.code) : [])
+  const warningFor = (c: TakenCourse) => (planner && c.grade === PLANNED ? checkPlanned(c, courses, catalog[c.code]) : undefined)
   const [dragging, setDragging] = useState<number>()
   const [over, setOver] = useState<string>()
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({})
@@ -48,9 +65,11 @@ export function SemesterBoard({ courses, onChange, whatIf, extraTerms, onExtraTe
         <div>
           <h2 className="text-lg font-semibold">Semesters</h2>
           <p className="text-sm text-muted">
-            {whatIf
-              ? 'Drag courses between semesters, or click one to change its grade or semester.'
-              : 'Your courses, grouped by semester.'}
+            {planner
+              ? 'Plan courses into future semesters. Drag them around, or click ⋯ to change one.'
+              : mode === 'whatif'
+                ? 'Change a grade with ⋯, or add a retake below.'
+                : 'Your courses, grouped by semester.'}
           </p>
         </div>
         <div className="flex items-center gap-4">
@@ -62,7 +81,7 @@ export function SemesterBoard({ courses, onChange, whatIf, extraTerms, onExtraTe
               {anyOpen ? 'Collapse all' : 'Expand all'}
             </button>
           )}
-          {courses.length > 0 && !whatIf && (
+          {courses.length > 0 && mode === 'current' && (
             <button className="text-xs text-faint hover:text-needed" onClick={() => onChange([])}>
               Clear all courses
             </button>
@@ -71,9 +90,10 @@ export function SemesterBoard({ courses, onChange, whatIf, extraTerms, onExtraTe
       </div>
 
       <AddCourse
-        terms={[...terms, ...upcoming]}
-        defaultTerm={whatIf ? upcoming[0] : terms.at(-1) ?? upcoming[0]}
-        whatIf={whatIf}
+        key={mode}
+        terms={planner ? future : mode === 'whatif' && terms.length ? terms : [...terms, ...upcoming]}
+        defaultTerm={planner ? future[0] : terms.at(-1) ?? upcoming[0]}
+        grades={planner ? [PLANNED] : GRADES}
         onAdd={(c) => onChange([...courses, c])}
       />
 
@@ -91,12 +111,12 @@ export function SemesterBoard({ courses, onChange, whatIf, extraTerms, onExtraTe
               <div
                 key={term}
                 onDragOver={(e) => {
-                  if (!whatIf || prior) return
+                  if (!canDrop(term)) return
                   e.preventDefault()
                   setOver(term)
                 }}
                 onDragLeave={() => setOver((o) => (o === term ? undefined : o))}
-                onDrop={() => !prior && drop(term)}
+                onDrop={() => canDrop(term) && drop(term)}
                 className={`rounded-xl border bg-raised/60 p-3 transition-colors ${
                   over === term ? 'border-burnt bg-burnt/10' : 'border-line'
                 }`}
@@ -125,53 +145,65 @@ export function SemesterBoard({ courses, onChange, whatIf, extraTerms, onExtraTe
                   </p>
                 ) : (
                   <ul className="space-y-1">
-                    {inTerm.map(({ c, i }) => (
-                      <li
-                        key={`${c.term}|${c.code}|${i}`}
-                        draggable={whatIf}
-                        onDragStart={(e) => {
-                          e.dataTransfer.setData('text/plain', c.code)
-                          e.dataTransfer.effectAllowed = 'move'
-                          setDragging(i)
-                        }}
-                        onDragEnd={() => {
-                          setDragging(undefined)
-                          setOver(undefined)
-                        }}
-                        className={`group flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm hover:bg-line/60 ${
-                          whatIf ? 'cursor-grab active:cursor-grabbing' : ''
-                        } ${dragging === i ? 'opacity-40' : ''}`}
-                      >
-                        <div className="min-w-0 flex-1">
-                          <div className="whitespace-nowrap font-medium">{c.code}</div>
-                          {c.title && <div className="truncate text-xs text-faint">{c.title}</div>}
-                        </div>
-                        <span className="text-xs text-faint">{c.credits}</span>
-                        <GradePill grade={c.grade} />
-                        {whatIf ? (
-                          <EditCourse
-                            course={c}
-                            terms={[...terms, ...upcoming]}
-                            onSave={(patch) => update(i, patch)}
-                            onRemove={() => remove(i)}
-                          />
-                        ) : (
-                          <button
-                            className="px-1 text-faint opacity-0 hover:text-needed group-hover:opacity-100 focus:opacity-100"
-                            aria-label={`Remove ${c.code}`}
-                            onClick={() => remove(i)}
-                          >
-                            ×
-                          </button>
-                        )}
-                      </li>
-                    ))}
+                    {inTerm.map(({ c, i }) => {
+                      const warning = warningFor(c)
+                      return (
+                        <li
+                          key={`${c.term}|${c.code}|${i}`}
+                          draggable={canEdit(c)}
+                          onDragStart={(e) => {
+                            e.dataTransfer.setData('text/plain', c.code)
+                            e.dataTransfer.effectAllowed = 'move'
+                            setDragging(i)
+                          }}
+                          onDragEnd={() => {
+                            setDragging(undefined)
+                            setOver(undefined)
+                          }}
+                          className={`group flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm hover:bg-line/60 ${
+                            canEdit(c) ? 'cursor-grab active:cursor-grabbing' : ''
+                          } ${dragging === i ? 'opacity-40' : ''}`}
+                        >
+                          <div className="min-w-0 flex-1">
+                            <div className="whitespace-nowrap font-medium">{c.code}</div>
+                            {c.title && <div className="truncate text-xs text-faint">{c.title}</div>}
+                            {warning?.prereq.length ? (
+                              <div className="text-xs text-burnt-soft">⚠ Needs {warning.prereq.join(', ')} first</div>
+                            ) : null}
+                            {warning?.coreq.length ? (
+                              <div className="text-xs text-burnt-soft">⚠ Take with {warning.coreq.join(', ')}</div>
+                            ) : null}
+                          </div>
+                          <span className="text-xs text-faint">{c.credits}</span>
+                          <GradePill grade={c.grade} />
+                          {canEdit(c) ? (
+                            <EditCourse
+                              course={c}
+                              terms={moveTerms}
+                              grades={planner ? undefined : GRADES}
+                              onSave={(patch) => update(i, patch)}
+                              onRemove={() => remove(i)}
+                            />
+                          ) : planner ? (
+                            <span className="w-4" />
+                          ) : (
+                            <button
+                              className="px-1 text-faint opacity-0 hover:text-needed group-hover:opacity-100 focus:opacity-100"
+                              aria-label={`Remove ${c.code}`}
+                              onClick={() => remove(i)}
+                            >
+                              ×
+                            </button>
+                          )}
+                        </li>
+                      )
+                    })}
                   </ul>
                 )}
               </div>
             )
           })}
-          {whatIf && <AddSemester key={upcoming[0]} upcoming={upcoming} onAdd={(t) => onExtraTerms([...extraTerms, t])} />}
+          {planner && <AddSemester key={upcoming[0]} upcoming={upcoming} onAdd={(t) => onExtraTerms([...extraTerms, t])} />}
         </div>
       )}
     </Panel>
@@ -199,12 +231,12 @@ function GradePill({ grade }: { grade: string }) {
 function AddCourse({
   terms,
   defaultTerm,
-  whatIf,
+  grades,
   onAdd,
 }: {
   terms: string[]
   defaultTerm: string
-  whatIf: boolean
+  grades: string[]
   onAdd: (c: TakenCourse) => void
 }) {
   const [code, setCode] = useState('')
@@ -212,7 +244,6 @@ function AddCourse({
   const [grade, setGrade] = useState('')
   const [term, setTerm] = useState('')
   const [error, setError] = useState('')
-  const grades = whatIf ? ['PL', ...GRADES] : GRADES
 
   function submit(e: FormEvent) {
     e.preventDefault()
@@ -225,7 +256,7 @@ function AddCourse({
     onAdd({
       code: normalized,
       credits: Number(credits) || 0,
-      grade: grade || (whatIf ? 'PL' : 'A'),
+      grade: grade || grades[0],
       term: term || defaultTerm,
     })
     setCode('')
@@ -241,7 +272,7 @@ function AddCourse({
           <input className={inputClass} value={credits} onChange={(e) => setCredits(e.target.value)} inputMode="decimal" />
         </Field>
         <Field label="Grade">
-          <select className={inputClass} value={grade || (whatIf ? 'PL' : 'A')} onChange={(e) => setGrade(e.target.value)}>
+          <select className={inputClass} value={grade || grades[0]} onChange={(e) => setGrade(e.target.value)}>
             {grades.map((g) => (
               <option key={g} value={g}>
                 {g === 'PL' ? 'Planned' : g}
@@ -281,11 +312,14 @@ function Field({ label, children, className = '' }: { label: string; children: R
 function EditCourse({
   course,
   terms,
+  grades,
   onSave,
   onRemove,
 }: {
   course: TakenCourse
   terms: string[]
+  /** Grades to pick from. Planned courses have no grade to change. */
+  grades?: string[]
   onSave: (patch: Partial<TakenCourse>) => void
   onRemove: () => void
 }) {
@@ -298,15 +332,17 @@ function EditCourse({
       {(close) => (
         <div className="space-y-3">
           <div className="font-semibold">{course.code}</div>
-          <Field label="Grade">
-            <select className={inputClass} value={course.grade} onChange={(e) => onSave({ grade: e.target.value })}>
-              {['PL', ...GRADES].map((g) => (
-                <option key={g} value={g}>
-                  {g === 'PL' ? 'Planned' : g}
-                </option>
-              ))}
-            </select>
-          </Field>
+          {grades && (
+            <Field label="Grade">
+              <select className={inputClass} value={course.grade} onChange={(e) => onSave({ grade: e.target.value })}>
+                {[...new Set([course.grade, ...grades])].map((g) => (
+                  <option key={g} value={g}>
+                    {g}
+                  </option>
+                ))}
+              </select>
+            </Field>
+          )}
           <Field label="Credits">
             <input
               className={inputClass}
@@ -334,7 +370,7 @@ function EditCourse({
               close()
             }}
           >
-            Remove from plan
+            {course.grade === PLANNED ? 'Remove from plan' : 'Remove'}
           </button>
         </div>
       )}

@@ -13,7 +13,7 @@ interface Props {
   taken?: TakenCourse
   /** Titles known from the student's courses, keyed by code. */
   titles: Record<string, string>
-  /** In What-if mode: add this course to a planned semester. */
+  /** In Planner mode: add this course to a planned semester. */
   onPlan?: (code: string, term: string) => void
   planTerms?: string[]
   variant?: 'option' | 'used' | 'heading'

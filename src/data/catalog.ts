@@ -55,3 +55,22 @@ export function useCatalogCourse(code: string): CatalogLookup {
   }, [code])
   return result?.code === code ? result.lookup : { status: 'loading' }
 }
+
+/** Catalog entries for several courses at once, filled in as their subject files load. */
+export function useCatalogCourses(codes: string[]): Record<string, CatalogCourse> {
+  const [found, setFound] = useState<Record<string, CatalogCourse>>({})
+  const key = [...new Set(codes)].sort().join('|')
+  useEffect(() => {
+    let live = true
+    const wanted = key ? key.split('|') : []
+    Promise.all(wanted.map((code) => loadSubject(code.split(' ')[0]).then((f) => [code, f?.courses[code]] as const))).then(
+      (pairs) => {
+        if (live) setFound(Object.fromEntries(pairs.filter(([, c]) => c)) as Record<string, CatalogCourse>)
+      },
+    )
+    return () => {
+      live = false
+    }
+  }, [key])
+  return found
+}

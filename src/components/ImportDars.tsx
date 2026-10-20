@@ -6,7 +6,7 @@ import { inputClass } from './styles'
 
 interface Props {
   program: Program
-  onImport: (courses: TakenCourse[], matched: Program | undefined) => void
+  onImport: (courses: TakenCourse[]) => void
 }
 
 export function ImportDars({ program, onImport }: Props) {
@@ -21,16 +21,19 @@ export function ImportDars({ program, onImport }: Props) {
       setMessage({ tone: 'error', text: "Couldn't find any courses. Is this a DARS Audit Results report?" })
       return
     }
-    const matched = programForDars(result.programCode)
-    onImport(result.courses, matched)
+    // The major is always the one picked in the dropdown. The DARS program code
+    // only drives a heads-up when it looks like a different major.
+    onImport(result.courses)
 
     const parts = [`Imported ${result.courses.length} courses.`]
-    if (result.programCode && !matched) {
+    const darsProgram = programForDars(result.programCode)
+    if (darsProgram && darsProgram.id !== program.id) {
+      parts.push(`Your DARS looks like it's for ${darsProgram.name}, but you picked ${program.name}. Change the major above if that's not right.`)
+    } else if (result.programCode && !darsProgram) {
       parts.push(`Your DARS is for ${result.programCode}, which isn't supported yet, so it's audited against ${program.name}.`)
     }
-    const target = matched ?? program
-    if (result.catalogYear && !result.catalogYear.endsWith(target.catalogYear.slice(0, 4))) {
-      parts.push(`Your catalog year is ${result.catalogYear}, but these requirements are for ${target.catalogYear}.`)
+    if (result.catalogYear && !result.catalogYear.endsWith(program.catalogYear.slice(0, 4))) {
+      parts.push(`Your catalog year is ${result.catalogYear}, but these requirements are for ${program.catalogYear}.`)
     }
     setMessage({ tone: parts.length > 1 ? 'warn' : 'ok', text: parts.join(' ') })
     setPasting(false)

@@ -248,11 +248,10 @@ export default function App() {
                   {!whatIf && (
                     <ImportDars
                       program={program}
-                      onImport={(imported, matched) => {
+                      onImport={(imported) => {
                         setCourses(imported)
                         setPlan(imported)
                         setPlanTerms([])
-                        if (matched) setProgramId(matched.id)
                       }}
                     />
                   )}

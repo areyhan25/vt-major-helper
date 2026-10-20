@@ -1,6 +1,7 @@
 import { useState, type FormEvent, type ReactNode } from 'react'
 import { isInProgress } from '../engine/grades'
 import { normalizeCode } from '../engine/match'
+import { PRIOR, semesterKeyFor } from '../engine/semesters'
 import { termLabel, termOrder, termsAfter } from '../engine/terms'
 import type { TakenCourse } from '../engine/types'
 import { inputClass } from './styles'
@@ -18,10 +19,13 @@ interface Props {
 }
 
 export function SemesterBoard({ courses, onChange, whatIf, extraTerms, onExtraTerms }: Props) {
-  const terms = [...new Set([...courses.map((c) => c.term), ...(whatIf ? extraTerms : [])])].sort(
-    (a, b) => termOrder(a) - termOrder(b),
+  const keyOf = semesterKeyFor(courses)
+  // Block keys: real terms in calendar order, with prior AP/transfer credit first.
+  const blocks = [...new Set([...courses.map(keyOf), ...(whatIf ? extraTerms : [])])].sort(
+    (a, b) => (a === PRIOR ? -1 : b === PRIOR ? 1 : termOrder(a) - termOrder(b)),
   )
-  const last = terms.at(-1) ?? ''
+  const terms = blocks.filter((b) => b !== PRIOR)
+  const last = [...courses.map((c) => c.term), ...terms].sort((a, b) => termOrder(a) - termOrder(b)).at(-1) ?? ''
   const upcoming = termsAfter(last, 6)
   const [dragging, setDragging] = useState<number>()
   const [over, setOver] = useState<string>()
@@ -61,35 +65,39 @@ export function SemesterBoard({ courses, onChange, whatIf, extraTerms, onExtraTe
         onAdd={(c) => onChange([...courses, c])}
       />
 
-      {terms.length === 0 ? (
+      {blocks.length === 0 ? (
         <p className="mt-6 text-sm text-faint">No courses yet. Import your DARS or add courses above.</p>
       ) : (
         <div className="mt-5 grid items-start gap-4 sm:grid-cols-2 xl:grid-cols-3">
-          {terms.map((term) => {
-            const inTerm = courses.map((c, i) => ({ c, i })).filter(({ c }) => c.term === term)
+          {blocks.map((term) => {
+            const prior = term === PRIOR
+            const inTerm = courses.map((c, i) => ({ c, i })).filter(({ c }) => keyOf(c) === term)
             const credits = inTerm.reduce((n, { c }) => n + c.credits, 0)
             const planned = inTerm.some(({ c }) => c.grade === 'PL')
             return (
               <div
                 key={term}
                 onDragOver={(e) => {
-                  if (!whatIf) return
+                  if (!whatIf || prior) return
                   e.preventDefault()
                   setOver(term)
                 }}
                 onDragLeave={() => setOver((o) => (o === term ? undefined : o))}
-                onDrop={() => drop(term)}
+                onDrop={() => !prior && drop(term)}
                 className={`rounded-xl border bg-raised/60 p-3 transition-colors ${
                   over === term ? 'border-burnt bg-burnt/10' : 'border-line'
                 }`}
               >
                 <div className="mb-2 flex items-baseline justify-between">
                   <h3 className="font-medium">
-                    {termLabel(term)}
+                    {prior ? 'Transfer & AP credit' : termLabel(term)}
                     {planned && <span className="ml-2 text-xs font-normal text-burnt-soft">planned</span>}
                   </h3>
                   <span className="text-xs text-faint">{credits} cr</span>
                 </div>
+                {prior && (
+                  <p className="-mt-1 mb-2 text-xs text-faint">Earned before your first semester at VT</p>
+                )}
                 {inTerm.length === 0 ? (
                   <p className="rounded-lg border border-dashed border-line px-3 py-4 text-center text-xs text-faint">
                     Drop courses here

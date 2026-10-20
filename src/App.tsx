@@ -4,6 +4,7 @@ import { GpaView } from './components/GpaView'
 import { ImportDars } from './components/ImportDars'
 import { ProgressGauge, StatTiles } from './components/Overview'
 import { SemesterBoard } from './components/SemesterBoard'
+import { MajorLoading, Welcome } from './components/Welcome'
 import { Panel } from './components/ui'
 import { comingSoon, courseInfo, programs } from './data'
 import { runAudit } from './engine/audit'
@@ -14,7 +15,7 @@ import { load, save, type Tab } from './storage'
 
 export default function App() {
   const [saved] = useState(load)
-  const [programId, setProgramId] = useState(saved.programId ?? programs[0].id)
+  const [programId, setProgramId] = useState<string | undefined>(saved.programId)
   const [courses, setCourses] = useState<TakenCourse[]>(saved.courses)
   const [whatIf, setWhatIf] = useState(saved.whatIf ?? false)
   // null until What-if mode is first opened, then a separate copy of the courses.
@@ -23,13 +24,25 @@ export default function App() {
   const [tab, setTab] = useState<Tab>(saved.tab ?? 'audit')
   const [expected, setExpected] = useState(saved.expected ?? {})
   const [confirmingReset, setConfirmingReset] = useState(false)
+  // True for a moment after a major is picked on the welcome page.
+  const [loading, setLoading] = useState(false)
+  // Fade the app in when it replaces the loading screen, but not on a plain page load.
+  const [fadeIn, setFadeIn] = useState(false)
+
+  useEffect(() => {
+    if (!loading) return
+    const t = setTimeout(() => setLoading(false), 1200)
+    return () => clearTimeout(t)
+  }, [loading])
 
   useEffect(
     () => save({ programId, courses, plan: plan ?? undefined, planTerms, whatIf, tab, expected }),
     [programId, courses, plan, planTerms, whatIf, tab, expected],
   )
 
-  const program = programs.find((p) => p.id === programId) ?? programs[0]
+  // Undefined until a major is picked on the welcome page.
+  const picked = programs.find((p) => p.id === programId)
+  const program = picked ?? programs[0]
   const active = whatIf && plan ? plan : courses
   const audit = useMemo(() => runAudit(program, active, courseInfo), [program, active])
 
@@ -54,13 +67,13 @@ export default function App() {
     setPlanTerms([])
   }
 
-  /** Clears the courses, the What-if plan, and the chosen major. */
+  /** Clears the courses, the What-if plan, and the chosen major, which brings back the welcome page. */
   function startOver() {
     setCourses([])
     setPlan(null)
     setPlanTerms([])
     setWhatIf(false)
-    setProgramId(programs[0].id)
+    setProgramId(undefined)
     setExpected({})
     setConfirmingReset(false)
   }
@@ -126,8 +139,21 @@ export default function App() {
     </div>
   )
 
+  if (!picked)
+    return (
+      <Welcome
+        programs={programs}
+        onPick={(id) => {
+          setProgramId(id)
+          setLoading(true)
+          setFadeIn(true)
+        }}
+      />
+    )
+  if (loading) return <MajorLoading program={picked} />
+
   return (
-    <div className="flex min-h-screen">
+    <div className={`flex min-h-screen ${fadeIn ? 'app-fade-in' : ''}`}>
       <aside className="sticky top-0 hidden h-screen w-72 shrink-0 flex-col border-r border-line bg-panel p-5 lg:flex">
         <Brand />
         <div className="mt-8">

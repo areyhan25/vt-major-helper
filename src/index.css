@@ -36,3 +36,44 @@ body {
 summary::-webkit-details-marker {
   display: none;
 }
+
+/* Fills the bar on the loading screen shown after picking a major. */
+@keyframes loading-fill {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+.loading-bar {
+  animation: loading-fill 1.2s ease-in-out forwards;
+}
+
+/* The app easing in after the loading screen. */
+@keyframes app-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.app-fade-in {
+  animation: app-fade-in 0.5s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-fade-in {
+    animation: none;
+  }
+
+  .loading-bar {
+    animation: none;
+    width: 100%;
+  }
+}

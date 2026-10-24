@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { AuditView } from './components/AuditView'
+import { AutoPlan } from './components/AutoPlan'
 import { GpaView } from './components/GpaView'
 import { ImportDars } from './components/ImportDars'
 import { ProgressGauge, StatTiles } from './components/Overview'
@@ -25,6 +26,7 @@ export default function App() {
   // What-if mode's scratch copy of the courses and major. Never saved, and dropped on leaving.
   const [whatIf, setWhatIf] = useState<{ courses: TakenCourse[]; programId: string }>()
   const [planTerms, setPlanTerms] = useState<string[]>(saved.planTerms ?? [])
+  const [planMax, setPlanMax] = useState(saved.planMax ?? 16)
   const [tab, setTab] = useState<Tab>(saved.tab ?? 'audit')
   const [expected, setExpected] = useState(saved.expected ?? {})
   const [confirmingReset, setConfirmingReset] = useState(false)
@@ -40,8 +42,8 @@ export default function App() {
   }, [loading])
 
   useEffect(
-    () => save({ programId, courses, planned, planTerms, mode: mode === 'whatif' ? 'current' : mode, tab, expected }),
-    [programId, courses, planned, planTerms, mode, tab, expected],
+    () => save({ programId, courses, planned, planTerms, planMax, mode: mode === 'whatif' ? 'current' : mode, tab, expected }),
+    [programId, courses, planned, planTerms, planMax, mode, tab, expected],
   )
 
   // Undefined until a major is picked on the welcome page.
@@ -53,6 +55,9 @@ export default function App() {
     [mode, whatIf, courses, planned],
   )
   const audit = useMemo(() => runAudit(program, active, courseInfo), [program, active])
+
+  // Auto-plan's elective slots aren't real courses yet.
+  const freeElectives = audit.unused.filter((c) => !c.autoPlan?.slot)
 
   const titles = useMemo(
     () => Object.fromEntries(active.filter((c) => c.title).map((c) => [c.code, c.title!])),
@@ -256,6 +261,17 @@ export default function App() {
               onAction={clearPlan}
             />
           )}
+          {mode === 'planner' && tab === 'audit' && (
+            <AutoPlan
+              program={program}
+              courses={courses}
+              planned={planned}
+              info={courseInfo}
+              maxCredits={planMax}
+              onMaxCredits={setPlanMax}
+              onPlanned={setPlanned}
+            />
+          )}
 
           {tab === 'audit' ? (
             <>
@@ -287,13 +303,13 @@ export default function App() {
                       }}
                     />
                   )}
-                  {audit.unused.length > 0 && (
+                  {freeElectives.length > 0 && (
                     <Panel className="p-5">
                       <div className="text-sm text-muted">Free electives</div>
                       <p className="mt-2 text-sm">
                         These count toward total credits but not a specific requirement:
                       </p>
-                      <p className="mt-2 text-sm font-medium">{audit.unused.map((c) => c.code).join(', ')}</p>
+                      <p className="mt-2 text-sm font-medium">{freeElectives.map((c) => c.code).join(', ')}</p>
                     </Panel>
                   )}
                 </div>

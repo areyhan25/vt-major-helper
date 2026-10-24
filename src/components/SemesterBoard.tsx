@@ -165,8 +165,23 @@ export function SemesterBoard({ courses, onChange, mode, extraTerms, onExtraTerm
                           } ${dragging === i ? 'opacity-40' : ''}`}
                         >
                           <div className="min-w-0 flex-1">
-                            <div className="whitespace-nowrap font-medium">{c.code}</div>
-                            {c.title && <div className="truncate text-xs text-faint">{c.title}</div>}
+                            {c.autoPlan?.slot ? (
+                              <>
+                                <div className="font-medium text-burnt-soft">{c.autoPlan.slot}</div>
+                                <div className="truncate text-xs text-faint">
+                                  Pick a course with ⋯
+                                  {c.autoPlan.options?.length ? ` · ${c.autoPlan.options.slice(0, 3).join(', ')}…` : ''}
+                                </div>
+                              </>
+                            ) : (
+                              <>
+                                <div className="whitespace-nowrap font-medium">{c.code}</div>
+                                {c.title && <div className="truncate text-xs text-faint">{c.title}</div>}
+                                {c.autoPlan?.alts && (
+                                  <div className="truncate text-xs text-faint">or {c.autoPlan.alts.join(', or ')}</div>
+                                )}
+                              </>
+                            )}
                             {warning?.prereq.length ? (
                               <div className="text-xs text-burnt-soft">⚠ Needs {warning.prereq.join(', ')} first</div>
                             ) : null}
@@ -181,6 +196,7 @@ export function SemesterBoard({ courses, onChange, mode, extraTerms, onExtraTerm
                               course={c}
                               terms={moveTerms}
                               grades={planner ? undefined : GRADES}
+                              canRename={planner}
                               onSave={(patch) => update(i, patch)}
                               onRemove={() => remove(i)}
                             />
@@ -313,6 +329,7 @@ function EditCourse({
   course,
   terms,
   grades,
+  canRename,
   onSave,
   onRemove,
 }: {
@@ -320,6 +337,8 @@ function EditCourse({
   terms: string[]
   /** Grades to pick from. Planned courses have no grade to change. */
   grades?: string[]
+  /** Planned courses can be swapped for another, which is how an auto-plan slot gets filled. */
+  canRename?: boolean
   onSave: (patch: Partial<TakenCourse>) => void
   onRemove: () => void
 }) {
@@ -331,7 +350,8 @@ function EditCourse({
     >
       {(close) => (
         <div className="space-y-3">
-          <div className="font-semibold">{course.code}</div>
+          <div className="font-semibold">{course.autoPlan?.slot ?? course.code}</div>
+          {canRename && <RenameCourse course={course} onSave={onSave} />}
           {grades && (
             <Field label="Grade">
               <select className={inputClass} value={course.grade} onChange={(e) => onSave({ grade: e.target.value })}>
@@ -375,6 +395,45 @@ function EditCourse({
         </div>
       )}
     </Popover>
+  )
+}
+
+function RenameCourse({ course, onSave }: { course: TakenCourse; onSave: (patch: Partial<TakenCourse>) => void }) {
+  const slot = course.autoPlan?.slot
+  const [code, setCode] = useState('')
+  const [error, setError] = useState('')
+
+  function submit(e: FormEvent) {
+    e.preventDefault()
+    const normalized = normalizeCode(code)
+    if (!/^[A-Z]{2,5} [0-9X]{4}[A-Z]?$/.test(normalized)) {
+      setError('Enter a course like CS 4104.')
+      return
+    }
+    // Once you choose the course, it's yours: planning again won't replace it.
+    onSave({ code: normalized, title: undefined, autoPlan: undefined })
+    setCode('')
+    setError('')
+  }
+
+  const hints = slot ? course.autoPlan?.options : course.autoPlan?.alts
+  return (
+    <form onSubmit={submit} className="space-y-1">
+      <span className="block text-xs font-medium text-muted">{slot ? 'Pick a course' : 'Swap for'}</span>
+      <div className="flex gap-2">
+        <input
+          className={inputClass}
+          placeholder={hints?.find((h) => !h.includes('*') && !h.includes(' and ')) ?? 'CS 1114'}
+          value={code}
+          onChange={(e) => setCode(e.target.value)}
+        />
+        <button className="shrink-0 rounded-lg border border-line px-3 text-sm hover:border-burnt hover:text-burnt-soft">
+          Use
+        </button>
+      </div>
+      {hints?.length ? <p className="text-xs text-faint">Options: {hints.join(', ')}</p> : null}
+      {error && <p className="text-xs text-needed">{error}</p>}
+    </form>
   )
 }
 

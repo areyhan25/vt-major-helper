@@ -9,6 +9,8 @@ export interface Saved {
   planned?: TakenCourse[]
   /** Empty future semesters added in Planner mode. */
   planTerms?: string[]
+  /** Auto-plan's credit limit per semester. */
+  planMax?: number
   /** What-if mode isn't saved, since it resets when you leave it. */
   mode?: Exclude<Mode, 'whatif'>
   /** Older saves: What-if mode's full copy of the courses, which held the planned ones. */

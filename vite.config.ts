@@ -9,6 +9,9 @@ const inDocker = existsSync('/.dockerenv')
 
 // https://vite.dev/config/
 export default defineConfig({
+  // Relative asset paths, so the build works under GitHub Pages' /vt-major-helper/ subpath
+  // and at the root of any other host.
+  base: './',
   plugins: [react(), tailwindcss()],
   server: inDocker ? { host: true, watch: { usePolling: true, interval: 300 } } : {},
 })

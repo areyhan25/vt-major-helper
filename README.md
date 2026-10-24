@@ -22,6 +22,10 @@ npm test         # engine and DARS importer tests
 npm run build    # static site in dist/
 ```
 
+## Live site
+
+Every push to `main` runs the tests, builds, and deploys to GitHub Pages (`.github/workflows/deploy.yml`). The site is https://areyhan25.github.io/vt-major-helper/. Everything runs in the browser, so DARS uploads never leave the user's computer.
+
 ## How it's organized
 
 | Path | What's there |

@@ -3,6 +3,7 @@ import { AuditView } from './components/AuditView'
 import { AutoPlan } from './components/AutoPlan'
 import { GpaView } from './components/GpaView'
 import { ImportDars } from './components/ImportDars'
+import { ImportStep } from './components/ImportStep'
 import { ProgressGauge, StatTiles } from './components/Overview'
 import { SemesterBoard } from './components/SemesterBoard'
 import { MajorLoading, Welcome } from './components/Welcome'
@@ -11,6 +12,7 @@ import { comingSoon, courseInfo, programs } from './data'
 import { runAudit } from './engine/audit'
 import { PLANNED } from './engine/grades'
 import { termOrder, termsAfter } from './engine/terms'
+import type { DarsMessage } from './import/readDars'
 import type { TakenCourse } from './engine/types'
 import { load, save, type Mode, type Tab } from './storage'
 
@@ -18,6 +20,8 @@ export default function App() {
   const [saved] = useState(load)
   const [programId, setProgramId] = useState<string | undefined>(saved.programId)
   const [courses, setCourses] = useState<TakenCourse[]>(saved.courses)
+  // Saves from before the "Add your courses" page had no flag, and went straight to the audit.
+  const [started, setStarted] = useState(saved.started ?? saved.programId !== undefined)
   const [mode, setMode] = useState<Mode>(saved.mode ?? 'current')
   // Planner mode's future courses. Older saves kept them inside a full copy of the courses.
   const [planned, setPlanned] = useState<TakenCourse[]>(
@@ -30,10 +34,14 @@ export default function App() {
   const [tab, setTab] = useState<Tab>(saved.tab ?? 'audit')
   const [expected, setExpected] = useState(saved.expected ?? {})
   const [confirmingReset, setConfirmingReset] = useState(false)
-  // True for a moment after a major is picked on the welcome page.
+  // True for a moment after the "Add your courses" page.
   const [loading, setLoading] = useState(false)
   // Fade the app in when it replaces the loading screen, but not on a plain page load.
   const [fadeIn, setFadeIn] = useState(false)
+  // How the DARS import on the "Add your courses" page went, shown again at the top of the audit.
+  const [darsMessage, setDarsMessage] = useState<DarsMessage>()
+  // Picked "Add courses manually", so the audit opens on the add-course form.
+  const [addingByHand, setAddingByHand] = useState(false)
 
   useEffect(() => {
     if (!loading) return
@@ -42,8 +50,8 @@ export default function App() {
   }, [loading])
 
   useEffect(
-    () => save({ programId, courses, planned, planTerms, planMax, mode: mode === 'whatif' ? 'current' : mode, tab, expected }),
-    [programId, courses, planned, planTerms, planMax, mode, tab, expected],
+    () => save({ programId, started, courses, planned, planTerms, planMax, mode: mode === 'whatif' ? 'current' : mode, tab, expected }),
+    [programId, started, courses, planned, planTerms, planMax, mode, tab, expected],
   )
 
   // Undefined until a major is picked on the welcome page.
@@ -89,6 +97,8 @@ export default function App() {
     setWhatIf(undefined)
     setMode('current')
     setProgramId(undefined)
+    setStarted(false)
+    setDarsMessage(undefined)
     setExpected({})
     setConfirmingReset(false)
   }
@@ -147,15 +157,44 @@ export default function App() {
     </div>
   )
 
+  /** Leaves the "Add your courses" page for the loading screen, then the audit. */
+  function begin() {
+    setStarted(true)
+    setLoading(true)
+    setFadeIn(true)
+  }
+
+  function importCourses(imported: TakenCourse[]) {
+    setCourses(imported)
+    // Planned courses that now show up on the DARS aren't planned anymore.
+    setPlanned((p) => p.filter((c) => !imported.some((i) => i.code === c.code)))
+  }
+
   if (!picked)
     return (
       <Welcome
         programs={programs}
         onPick={(id) => {
           setProgramId(id)
-          setLoading(true)
-          setFadeIn(true)
+          // Someone who already has courses (from before Start over cleared the major) skips the next page.
+          setStarted(courses.length > 0)
         }}
+      />
+    )
+  if (!started)
+    return (
+      <ImportStep
+        program={picked}
+        onDars={(imported, message) => {
+          importCourses(imported)
+          setDarsMessage(message)
+          begin()
+        }}
+        onManual={() => {
+          setAddingByHand(true)
+          begin()
+        }}
+        onBack={() => setProgramId(undefined)}
       />
     )
   if (loading) return <MajorLoading program={picked} />
@@ -244,6 +283,15 @@ export default function App() {
             </div>
           )}
 
+          {tab === 'audit' && mode === 'current' && (
+            <ImportDars
+              program={program}
+              hasCourses={courses.length > 0}
+              initialMessage={darsMessage}
+              onImport={importCourses}
+            />
+          )}
+
           {mode === 'whatif' && (
             <ModeBanner
               title="What-if mode."
@@ -293,16 +341,6 @@ export default function App() {
                 </div>
                 <div className="space-y-6">
                   <ProgressGauge audit={audit} />
-                  {mode === 'current' && (
-                    <ImportDars
-                      program={program}
-                      onImport={(imported) => {
-                        setCourses(imported)
-                        // Planned courses that now show up on the DARS aren't planned anymore.
-                        setPlanned((p) => p.filter((c) => !imported.some((i) => i.code === c.code)))
-                      }}
-                    />
-                  )}
                   {freeElectives.length > 0 && (
                     <Panel className="p-5">
                       <div className="text-sm text-muted">Free electives</div>
@@ -328,6 +366,9 @@ export default function App() {
                   mode={mode}
                   extraTerms={planTerms}
                   onExtraTerms={setPlanTerms}
+                  focusAdd={addingByHand}
+                  // Only the first time, so switching modes or tabs later doesn't jump to the form.
+                  onAddFocused={() => setAddingByHand(false)}
                 />
               </div>
             </>

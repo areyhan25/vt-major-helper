@@ -1,4 +1,4 @@
-import { useState, type FormEvent, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react'
 import { useCatalogCourses } from '../data/catalog'
 import { isInProgress, PLANNED } from '../engine/grades'
 import { normalizeCode } from '../engine/match'
@@ -23,9 +23,12 @@ interface Props {
   /** Empty semesters added in Planner mode. */
   extraTerms: string[]
   onExtraTerms: (terms: string[]) => void
+  /** Scroll to the add-course form and put the cursor in it, for someone adding courses by hand. */
+  focusAdd?: boolean
+  onAddFocused?: () => void
 }
 
-export function SemesterBoard({ courses, onChange, mode, extraTerms, onExtraTerms }: Props) {
+export function SemesterBoard({ courses, onChange, mode, extraTerms, onExtraTerms, focusAdd, onAddFocused }: Props) {
   const planner = mode === 'planner'
   const keyOf = semesterKeyFor(courses)
   // Block keys: real terms in calendar order, with prior AP/transfer credit first.
@@ -95,6 +98,8 @@ export function SemesterBoard({ courses, onChange, mode, extraTerms, onExtraTerm
         defaultTerm={planner ? future[0] : terms.at(-1) ?? upcoming[0]}
         grades={planner ? [PLANNED] : GRADES}
         onAdd={(c) => onChange([...courses, c])}
+        focus={focusAdd}
+        onFocused={onAddFocused}
       />
 
       {blocks.length === 0 ? (
@@ -249,17 +254,30 @@ function AddCourse({
   defaultTerm,
   grades,
   onAdd,
+  focus,
+  onFocused,
 }: {
   terms: string[]
   defaultTerm: string
   grades: string[]
   onAdd: (c: TakenCourse) => void
+  focus?: boolean
+  onFocused?: () => void
 }) {
   const [code, setCode] = useState('')
   const [credits, setCredits] = useState('3')
   const [grade, setGrade] = useState('')
   const [term, setTerm] = useState('')
   const [error, setError] = useState('')
+  const formRef = useRef<HTMLFormElement>(null)
+  const codeRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    if (!focus) return
+    formRef.current?.scrollIntoView({ block: 'center' })
+    codeRef.current?.focus({ preventScroll: true })
+    onFocused?.()
+  }, [focus, onFocused])
 
   function submit(e: FormEvent) {
     e.preventDefault()
@@ -279,10 +297,10 @@ function AddCourse({
   }
 
   return (
-    <form onSubmit={submit} className="mt-4 rounded-xl bg-page/60 p-3">
+    <form ref={formRef} onSubmit={submit} className="mt-4 scroll-mt-6 rounded-xl bg-page/60 p-3">
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-[minmax(0,1.6fr)_minmax(0,0.7fr)_minmax(0,0.9fr)_minmax(0,1.3fr)_auto]">
         <Field label="Name" className="col-span-2 sm:col-span-1">
-          <input className={inputClass} placeholder="CS 1114" value={code} onChange={(e) => setCode(e.target.value)} />
+          <input ref={codeRef} className={inputClass} placeholder="CS 1114" value={code} onChange={(e) => setCode(e.target.value)} />
         </Field>
         <Field label="Credits">
           <input className={inputClass} value={credits} onChange={(e) => setCredits(e.target.value)} inputMode="decimal" />

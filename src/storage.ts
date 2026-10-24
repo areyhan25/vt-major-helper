@@ -4,6 +4,8 @@ const KEY = 'vt-major-helper:v1'
 
 export interface Saved {
   programId?: string
+  /** False while the "Add your courses" page is up, between picking a major and the audit. */
+  started?: boolean
   courses: TakenCourse[]
   /** Planner mode's future courses, all graded PL. Kept apart from the real record. */
   planned?: TakenCourse[]

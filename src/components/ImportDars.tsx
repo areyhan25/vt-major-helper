@@ -1,41 +1,31 @@
 import { useState } from 'react'
-import { programForDars } from '../data'
 import type { Program, TakenCourse } from '../engine/types'
-import { parseDars } from '../import/dars'
+import { DARS_ACCEPT, readDars, readDarsFile, type DarsMessage, type DarsResult } from '../import/readDars'
 import { inputClass } from './styles'
 
 interface Props {
   program: Program
+  /** True once there are courses, so the button says Replace instead of Upload. */
+  hasCourses: boolean
+  /** A note left over from importing on the setup page. */
+  initialMessage?: DarsMessage
   onImport: (courses: TakenCourse[]) => void
 }
 
-export function ImportDars({ program, onImport }: Props) {
-  const [message, setMessage] = useState<{ tone: 'ok' | 'warn' | 'error'; text: string }>()
+/** A slim strip at the top of the audit for uploading or replacing the DARS report. */
+export function ImportDars({ program, hasCourses, initialMessage, onImport }: Props) {
+  const [message, setMessage] = useState<DarsMessage | undefined>(initialMessage)
   const [busy, setBusy] = useState(false)
   const [pasting, setPasting] = useState(false)
   const [pasted, setPasted] = useState('')
 
-  function importText(text: string) {
-    const result = parseDars(text)
-    if (result.courses.length === 0) {
-      setMessage({ tone: 'error', text: "Couldn't find any courses. Is this a DARS Audit Results report?" })
+  function finish(result: DarsResult) {
+    if ('error' in result) {
+      setMessage(result.error)
       return
     }
-    // The major is always the one picked in the dropdown. The DARS program code
-    // only drives a heads-up when it looks like a different major.
     onImport(result.courses)
-
-    const parts = [`Imported ${result.courses.length} courses.`]
-    const darsProgram = programForDars(result.programCode)
-    if (darsProgram && darsProgram.id !== program.id) {
-      parts.push(`Your DARS looks like it's for ${darsProgram.name}, but you picked ${program.name}. Change the major above if that's not right.`)
-    } else if (result.programCode && !darsProgram) {
-      parts.push(`Your DARS is for ${result.programCode}, which isn't supported yet, so it's audited against ${program.name}.`)
-    }
-    if (result.catalogYear && !result.catalogYear.endsWith(program.catalogYear.slice(0, 4))) {
-      parts.push(`Your catalog year is ${result.catalogYear}, but these requirements are for ${program.catalogYear}.`)
-    }
-    setMessage({ tone: parts.length > 1 ? 'warn' : 'ok', text: parts.join(' ') })
+    setMessage(result.message)
     setPasting(false)
     setPasted('')
   }
@@ -43,38 +33,31 @@ export function ImportDars({ program, onImport }: Props) {
   async function onFile(file: File) {
     setBusy(true)
     setMessage(undefined)
-    try {
-      if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
-        const { pdfToText } = await import('../import/pdf')
-        importText(await pdfToText(await file.arrayBuffer()))
-      } else {
-        importText(await file.text())
-      }
-    } catch (e) {
-      setMessage({ tone: 'error', text: `Couldn't read that file: ${(e as Error).message}` })
-    } finally {
-      setBusy(false)
-    }
+    finish(await readDarsFile(file, program))
+    setBusy(false)
   }
 
-  const tone = { ok: 'bg-black/20 text-white', warn: 'bg-black/30 text-white', error: 'bg-black/40 text-white' }
-
   return (
-    <section className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-maroon to-[#b4462f] p-5 shadow-lg shadow-maroon/20">
+    <section
+      aria-label="DARS report"
+      className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-maroon to-[#b4462f] px-5 py-4 shadow-lg shadow-maroon/20"
+    >
       <div className="pointer-events-none absolute -right-10 -top-10 size-40 rounded-full bg-burnt/30 blur-2xl" />
-      <div className="relative">
-        <div className="text-sm text-white/70">Import</div>
-        <h2 className="mt-1 text-xl font-semibold leading-snug text-white">Load your DARS audit</h2>
-        <p className="mt-2 text-sm text-white/80">
-          Run your audit in Hokie SPA and save the Audit Results page as a PDF. It's read right here in your browser
-          and never uploaded.
-        </p>
-        <div className="mt-4 flex flex-wrap gap-2">
+      <div className="relative flex flex-wrap items-center justify-between gap-3">
+        <div className="min-w-0">
+          <h2 className="font-semibold text-white">{hasCourses ? 'Your DARS report' : 'Upload your DARS report'}</h2>
+          <p className="text-sm text-white/80">
+            {hasCourses
+              ? 'Got a newer audit? Upload it to replace your courses.'
+              : 'Save your Audit Results from Hokie SPA as a PDF. It’s read right here and never uploaded.'}
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-2">
           <label className="cursor-pointer rounded-lg bg-white px-3.5 py-1.5 text-sm font-semibold text-maroon hover:bg-white/90">
-            {busy ? 'Reading…' : 'Choose PDF'}
+            {busy ? 'Reading…' : hasCourses ? 'Replace DARS' : 'Upload DARS'}
             <input
               type="file"
-              accept=".pdf,.txt,.html,application/pdf,text/plain"
+              accept={DARS_ACCEPT}
               className="hidden"
               disabled={busy}
               onChange={(e) => {
@@ -91,25 +74,39 @@ export function ImportDars({ program, onImport }: Props) {
             Paste text
           </button>
         </div>
-        {pasting && (
-          <div className="mt-3 space-y-2">
-            <textarea
-              className={`${inputClass} h-28 font-mono text-xs`}
-              placeholder="Select all on your DARS page, copy, and paste here"
-              value={pasted}
-              onChange={(e) => setPasted(e.target.value)}
-            />
-            <button
-              className="rounded-lg bg-white px-3.5 py-1.5 text-sm font-semibold text-maroon disabled:opacity-50"
-              disabled={!pasted.trim()}
-              onClick={() => importText(pasted)}
-            >
-              Import
-            </button>
-          </div>
-        )}
-        {message && <p className={`mt-3 rounded-lg px-3 py-2 text-sm ${tone[message.tone]}`}>{message.text}</p>}
       </div>
+      {pasting && (
+        <PasteDars value={pasted} onChange={setPasted} onImport={() => finish(readDars(pasted, program))} />
+      )}
+      {message && (
+        <p className="relative mt-3 flex items-start justify-between gap-3 rounded-lg bg-black/30 px-3 py-2 text-sm text-white">
+          <span>{message.text}</span>
+          <button className="text-white/70 hover:text-white" aria-label="Dismiss" onClick={() => setMessage(undefined)}>
+            ×
+          </button>
+        </p>
+      )}
     </section>
+  )
+}
+
+/** The paste-the-page fallback, for when saving a PDF isn't working. */
+export function PasteDars({ value, onChange, onImport }: { value: string; onChange: (v: string) => void; onImport: () => void }) {
+  return (
+    <div className="relative mt-3 space-y-2">
+      <textarea
+        className={`${inputClass} h-28 font-mono text-xs`}
+        placeholder="Select all on your DARS page, copy, and paste here"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+      />
+      <button
+        className="rounded-lg bg-white px-3.5 py-1.5 text-sm font-semibold text-maroon disabled:opacity-50"
+        disabled={!value.trim()}
+        onClick={onImport}
+      >
+        Import
+      </button>
+    </div>
   )
 }

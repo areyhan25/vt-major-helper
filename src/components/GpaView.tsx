@@ -122,7 +122,7 @@ export function GpaView({ courses, expected, onExpected, creditsToGo, planning }
                 {pending.map((c) => (
                   <li key={expectedKey(c)} className="flex items-center gap-3 py-2 text-sm">
                     <div className="min-w-0 flex-1">
-                      <div className="font-medium">{c.code}</div>
+                      <div className="font-medium">{c.autoPlan?.slot ?? c.code}</div>
                       <div className="truncate text-xs text-faint">
                         {termLabel(c.term)} · {c.grade === PLANNED ? 'planned' : 'in progress'}
                         {c.title && ` · ${c.title}`}
@@ -131,7 +131,7 @@ export function GpaView({ courses, expected, onExpected, creditsToGo, planning }
                     <span className="text-xs text-faint">{c.credits} cr</span>
                     <select
                       className={selectClass}
-                      aria-label={`Expected grade for ${c.code}`}
+                      aria-label={`Expected grade for ${c.autoPlan?.slot ?? c.code}`}
                       value={expected[expectedKey(c)] ?? ''}
                       onChange={(e) => setExpected(c, e.target.value)}
                     >

@@ -123,6 +123,15 @@ export interface TakenCourse {
   /** Letter grade, or AP, TR, IP (in progress), P, W, ... */
   grade: string
   title?: string
+  /** Set on planned courses that auto-plan placed. Running it again replaces them. */
+  autoPlan?: {
+    /** A placeholder for a requirement that leaves a choice, e.g. "CS Theory Elective". */
+    slot?: string
+    /** Courses (or patterns like "CS 4***") that fill the slot. */
+    options?: string[]
+    /** Other ways to meet the requirement, when auto-plan took the first option. */
+    alts?: string[]
+  }
 }
 
 /** Extra facts about courses, keyed by code. Today that's only Pathways tags. */
